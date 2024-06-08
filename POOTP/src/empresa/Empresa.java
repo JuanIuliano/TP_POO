@@ -94,6 +94,7 @@ public class Empresa {
 		
 		//Iniciamos sesión
 		BaseDeUsuarios base = new BaseDeUsuarios();
+		base.inicializarBaseDeUsuarios();
 		ingresar(base);
 		//Creamos objeto de la clase Scanner
 		Scanner scanner = new Scanner(System.in);
