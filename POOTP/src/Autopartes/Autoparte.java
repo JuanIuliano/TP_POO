@@ -359,5 +359,10 @@ public class Autoparte implements AutoparteInterface{
 		autoparte.stock = autoparte.stock - cantidad;
 	}
 	
+	@Override
+	public void sumarStock(Autoparte autoparte, int cantidad) {
+		autoparte.stock = autoparte.stock + cantidad;
+	}
+	
 }
  

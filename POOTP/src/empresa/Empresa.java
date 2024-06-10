@@ -3,6 +3,8 @@ import usuario.Usuario;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -10,10 +12,11 @@ import java.time.format.DateTimeFormatter;
 import Autopartes.Autoparte;
 import Autopartes.Catalogo;
 import pedido.Pedido;
+import pedido.Venta;
 import usuario.BaseDeUsuarios;
  
 public class Empresa {
-	public static Catalogo catalogo = new Catalogo();
+	
 	
 	
 	//Método para ingresar al sistema
@@ -99,15 +102,18 @@ public class Empresa {
 	
 	public static void main(String[] args) {
 		
+		ArrayList <Pedido> pedidos = new ArrayList <Pedido>();
+		ArrayList <Venta> ventas = new ArrayList <Venta>();
+		Tutta t = new Tutta(pedidos, ventas);
+		
 		//Iniciamos sesión
 		BaseDeUsuarios base = new BaseDeUsuarios();
 		ingresar(base);
 		//Creamos objeto de la clase Scanner
 		Scanner scanner = new Scanner(System.in);
-		//Inicializamos el catálogo
+		//Creamos un objeto de la clase Catalogo y lo inicializamos
+		Catalogo catalogo = new Catalogo();
 		catalogo.inicializarCatalogo();
-		//Creamos objeto de la clase pedido, desde acá vamos a gestionar la creación de nuevos pedidos
-		Pedido pedido = new Pedido();
 		//Variable que sirve para cortar el ciclo del menú
 		int flag=0;
 		
@@ -144,8 +150,7 @@ public class Empresa {
 			System.out.println("[2] Modificar autoparte");
 			System.out.println("[3] Eliminar autoparte");
 			System.out.println("[4] Listar productos");
-			System.out.println("[5] Registrar pedido");
-			System.out.println("[6] Listar pedidos");
+			System.out.println("[5] Listar pedidos");
 			System.out.println("[-1] Cerrar sesión");
 			System.out.println("[-2] SALIR");
 			System.out.println("ETC. AGREGAR EL RESTO DE FUNCIONALIDADES");
@@ -195,26 +200,188 @@ public class Empresa {
 				break;
 			
 			case 4:
+				int id = 0;
+				int cantidad = 0;
 				catalogo.listarCatalogo();	
 				System.out.println();
+				Map<Autoparte, Integer> autopartes = new HashMap <Autoparte, Integer> ();
+				while (id != -1) {
+					System.out.println("Ingresá [ID] de la autoparte que quiere agregar al carrito ");
+					System.out.println("Ingresá [-1] para continuar ");
+					id = scanner.nextInt();
+					if (catalogo.autoparteExistente(id)) {
+						System.out.println("Ingresá la cantidad que quiere agregar: ");
+						cantidad = scanner.nextInt();
+						if (catalogo.devolverAutoparte(id).getStock() >= cantidad) {
+							
+							Autoparte autoparteExistente = catalogo.devolverAutoparte(id);
+                            autopartes.put(autoparteExistente, autopartes.getOrDefault(autoparteExistente, 0) + cantidad);
+                            catalogo.restarStock(id, cantidad);
+                            System.out.println("id " + id + " cantidad " + cantidad);
+							
+                            /*
+							for(int i = 0; i < cantidad; i++) {
+								autopartes.add(catalogo.devolverAutoparte(id)); // Autoparte se agrega al array la cantidad de veces que se quiera
+								catalogo.restarStock(id);
+							}
+							*/
+							
+							System.out.println("id " + id + " cantidad " + cantidad);
+							
+							
+						}
+						
+					}else {
+						System.out.println("Esa autoparte no existe.");
+					}
+				}
+				if (!autopartes.isEmpty()) {
+					System.out.println("EL PEDIDO ES EL SIGUIENTE: ");
+					int i = 1;
+					
+					for (Map.Entry<Autoparte, Integer> entry : autopartes.entrySet()) {
+                        System.out.println(i + " - " + entry.getKey().getDenominacion() + " - " + entry.getValue());
+                        i++;
+                     }
+					
+					/*
+					for (Autoparte autoparte2 : autopartes) {
+						System.out.println(i + " - " + autoparte2.getDenominacion());
+						i++;
+					}
+					*/
+					
+					pedidos.add(nuevoPedido(autopartes, pedidos)); 
+					t.setPedidos(pedidos);
+				}
+				
 				break;
-			
+				
 			case 5:
-				pedido.crearPedido();
-				System.out.println("Ingresà cualquier tecla para continuar.");
-				scanner.next();
-				break;
-			
-			case 6:
-				pedido.verPedidos();
-				System.out.println("Ingresà cualquier tecla para continuar.");
-				scanner.next();
+				if(t.getPedidos().size() > 0) {					
+					System.out.println("Pedidos: ");
+					
+					for (Pedido pedido : t.getPedidos()) {
+                        System.out.println(pedido.getIdPedido() + " : ");
+                        System.out.println("Autopartes del pedido: ");
+                        for (Map.Entry<Autoparte, Integer> entry : pedido.getAutopartes().entrySet()) {
+                            System.out.println("- " + entry.getKey().getDenominacion() + " - " + entry.getValue());
+                        }
+                        System.out.println("--------------");
+                    }
+                    
+                    int flagBorrar = 0;
+                    while (flagBorrar != -1) {
+                        System.out.println("Ingresá [ID] del pedido que quieras cancelar");
+                        System.out.println("Ingresá [-1] para continuar ");
+                        int borrarPedido = scanner.nextInt();
+                        flagBorrar = borrarPedido;
+                        boolean borrado = false;
+                        for (Pedido pedido : pedidos) {
+                            if (pedido.getIdPedido() == borrarPedido) {
+                                for (Map.Entry<Autoparte, Integer> entry : pedido.getAutopartes().entrySet()) {
+                                    catalogo.sumarStock(entry.getKey().getId(), entry.getValue());
+                                }
+                                pedidos.remove(pedido);
+                                System.out.println("El pedido ha sido cancelado satisfactoriamente.");
+                                borrado = true;
+                                break;
+                            }
+                        }
+                        if (!borrado) {
+                            System.out.println("No existe pedido con ese id.");
+                        } else {
+                            break;
+                        }
+                    }
+					
+					/*
+					for (Pedido pedido : t.getPedidos()) {
+						System.out.println(pedido.getIdPedido() + " : ");
+						System.out.println("Autopartes del pedido: ");
+						for (Autoparte autoparte3 : pedido.getAutopartes()) {
+							System.out.println("- " + autoparte3.getDenominacion());
+						}
+						System.out.println("--------------");
+					}
+					
+					int flagBorrar = 0;
+					while(flagBorrar != -1) {
+						System.out.println("Ingresá [ID] del pedido que quieras cancelar");
+						System.out.println("Ingregá [-1] para continuar ");
+						int borrarPedido = scanner.nextInt();
+						flagBorrar = borrarPedido;
+						boolean borrado = false;
+						for (Pedido pedido : pedidos) {
+							if(pedido.getIdPedido() == borrarPedido) {
+								for (Autoparte autoparte2 : pedido.getAutopartes()) {
+									catalogo.sumarStock(autoparte2.getId());
+								}
+								pedidos.remove(pedido);
+								System.out.println("El pedido ha sido cancelado satisfactoriamente.");
+								borrado = true;
+								break;
+							}
+						}
+						if (borrado == false) {
+							System.out.println("No existe pedido con ese id.");
+						}else {
+							break;
+						}
+													
+					}
+					*/
+					
+					
+				}else {
+					System.out.println("No hay pedidos");
+					System.out.println("Ingresá cualquier tecla para continuar");
+					scanner.next();
+					break;
+				}
 				break;
 			}
-			
 		}
 	}
 
-	
+	private static Pedido nuevoPedido(Map<Autoparte, Integer> autopartes, ArrayList<Pedido> pedidos) {
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.println("Ingresá nombre del cliente: ");
+		String username = scanner.next();
+		
+		
+		boolean flagPedido = false;
+		int idPedido = 0;
+		
+		while(flagPedido != true) {
+			flagPedido = true;
+			System.out.println("Ingresá id del Pedido: ");
+			idPedido = scanner.nextInt();
+			for (Pedido pedido : pedidos) {
+				if (pedido.getIdPedido() == idPedido) {
+					System.out.println("Ya existe un pedido con ese ID ");
+					flagPedido = false;
+					break;
+				}
+			}
+		}
+		/*
+		Pedido p = new Pedido(username, idPedido, autopartes.size(), new Date(), autopartes);
+		for (Autoparte autoparte : p.getAutopartes()) {
+			System.out.println("estoy aca " + autoparte.getDenominacion());
+		}
+		*/
+		Pedido p = new Pedido(username, idPedido, autopartes.size(), new Date(), autopartes);
+        for (Map.Entry<Autoparte, Integer> entry : p.getAutopartes().entrySet()) {
+            System.out.println("Autoparte: " + entry.getKey().getDenominacion() + " - Cantidad: " + entry.getValue());
+        }
+		
+		p.registrarPedido(p);
+		return p;
+		
+		
+		
+	}
 	
 }

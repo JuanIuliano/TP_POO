@@ -248,15 +248,29 @@ public class Catalogo {
 			System.out.println("La autoparte que queres modificar no existe.");
 		}
 		else {
-			Autoparte autoparte = null;
+			for (Autoparte autoparte : listaAutopartes) {
+	            if (autoparte.getId() == id) {
+	            	autoparte.restarStock(autoparte, cantidad);
+	                break;
+	            }
+	        }
+			
+		}
+	}
+	
+	public void sumarStock(int id, int cantidad) {
+		if(autoparteExistente(id) == false) {
+			System.out.println("La autoparte que queres modificar no existe.");
+		}
+		else {
 			//si existe, la buscamos en la lista
-			for(int i=0; i<cantidad; i++) {
-				autoparte = listaAutopartes[i];
-				if (autoparte.getId() == id) {
-					break;
-				}
-			}
-			autoparte.restarStock(autoparte, cantidad);
+			for (Autoparte autoparte2 : listaAutopartes) {
+	            if (autoparte2.getId() == id) {
+	            	autoparte2.sumarStock(autoparte2, cantidad);
+	                break;
+	            }
+	        }
+			
 		}
 	}
 	
