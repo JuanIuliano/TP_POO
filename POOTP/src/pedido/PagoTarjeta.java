@@ -8,10 +8,15 @@ public class PagoTarjeta extends Pago {
 	
 	@Override
 	public double montoFinal(double montoInicial) {
-		//si el valor de recargo es mayor a 1 y menor a 2
-		System.out.println( cuotas + " cuotas de: " + montoInicial * recargo / cuotas );
-		return montoInicial * recargo;
+		if(cuotas == 2) {
+			recargo = 6;
+		} else if(cuotas == 3) {
+			recargo = 12;
+		} else if (cuotas == 6) {
+			recargo = 20;
+		}
 		//si el valor de recargo es porcentual
-		//return montoInicial * (100 + recargo) / 100;
+		System.out.println( cuotas + " cuotas de: " + montoInicial * (100 + recargo) / 100 / cuotas );
+		return montoInicial * (100 + recargo) / 100;
 	}
 }

@@ -1,15 +1,12 @@
 package usuario;
-
-import java.util.ArrayList;
-
+ 
 public class BaseDeUsuarios {
-	//ArrayList que va a hacer de base de datos, guarda objetos de la clase usuario (id, username, contraseña, etc)
-	private ArrayList <Usuario> listaUsuarios;
-		
+	Usuario[] listaUsuarios = new Usuario[5];
+	int cantidadDeUsuarios = 0;
 	
 	private boolean usuarioRegistrado(int id, String username, String mail) {
-		for (int i=0; i<listaUsuarios.size(); i++) {
-			Usuario user = listaUsuarios.get(i);
+		for (int i=0; i<cantidadDeUsuarios; i++) {
+			Usuario user = listaUsuarios[i];
 			if (user.getId() == id || user.getUsername().equals(username) || user.getMail().equals(mail)==true) {
 				return true;
 			}
@@ -17,16 +14,13 @@ public class BaseDeUsuarios {
 		return false;
 	}
 	
-	public void inicializarBaseDeUsuarios() {
-		listaUsuarios = new ArrayList<>();
-	}
-	
 	public boolean agregarUsuario(Usuario usuario) {
 		String username = usuario.getUsername();
 		String mail = usuario.getMail();
 		int id = usuario.getId();
 		if (usuarioRegistrado(id, username, mail)==false) {
-			listaUsuarios.add(usuario);
+			listaUsuarios[cantidadDeUsuarios] = usuario;
+			cantidadDeUsuarios++;
 			return true;
 			}
 		else {
@@ -40,9 +34,9 @@ public class BaseDeUsuarios {
 	
 	public boolean ValidarCredenciales(String username, String contraseña) {
 		//Recorremos la lista que contiene los usuarios 
-		for(int i=0; i<listaUsuarios.size(); i++) {
+		for(int i=0; i<cantidadDeUsuarios; i++) {
 			//creamos el objeto usuario para validar sus datos
-			Usuario user = listaUsuarios.get(i);
+			Usuario user = listaUsuarios[i];
 			//Comparamos las credenciales
 			if((user.getUsername().equals(username) || user.getMail().equals(username)) && user.getContraseña().equals(contraseña)) {
 				return true;
@@ -53,19 +47,30 @@ public class BaseDeUsuarios {
 	
 	public Usuario devolverUsuario(int id) {
 		Usuario usuario = null;
-		for(int i=0; i<listaUsuarios.size(); i++) {
-			if(listaUsuarios.get(i).getId() == id) {
-				return listaUsuarios.get(i);
+		for(int i=0; i<cantidadDeUsuarios; i++) {
+			if(listaUsuarios[i].getId() == id) {
+				return listaUsuarios[i];
 			}
 		}
 		System.out.println("El usuario no se encuentra registrado.");
 		return usuario;
 	}
  
-	public int getCantidadDeUsuarios() {
-		return listaUsuarios.size();
+	public Usuario[] getListaUsuarios() {
+		return listaUsuarios;
 	}
  
+	public void setListaUsuarios(Usuario[] listaUsuarios) {
+		this.listaUsuarios = listaUsuarios;
+	}
+ 
+	public int getCantidadDeUsuarios() {
+		return cantidadDeUsuarios;
+	}
+ 
+	public void setCantidadDeUsuarios(int cantidadDeUsuarios) {
+		this.cantidadDeUsuarios = cantidadDeUsuarios;
+	}
 	
 	
 }

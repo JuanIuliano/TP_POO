@@ -5,10 +5,8 @@ public class PagoEfectivo extends Pago{
 
 	@Override
 	public double montoFinal(double montoInicial) {
-		//si el valor de descuento es menor a 1
-		return montoInicial * descuento;
 		//si el valor de descuento es porcentual
-		//return montoInicial * descuento / 100;
+		return montoInicial * (100 - descuento) / 100;
 		
 	}
 	

@@ -1,29 +1,40 @@
 package Autopartes;
-import java.util.ArrayList;
 import java.util.Scanner;
  
 public class Catalogo {
 	//Creamos objeto de la clase Scanner
 	Scanner scanner = new Scanner(System.in);
 	//Lista que contiene las instancias de la clase Autoparte
-	public ArrayList <Autoparte> catalogo;
-	private ArrayList <Autoparte> autopartesStockMin;
+	public Autoparte[] listaAutopartes;
+	public int cantidad;
 	int inicializado;
-
+	private Autoparte[] autopartesStockMin;
+	private int stockMinIndex;
 	
 	public void inicializarCatalogo() {
-		catalogo = new ArrayList<>();
-		autopartesStockMin = new ArrayList<>();
+		listaAutopartes = new Autoparte[10];
+		autopartesStockMin = new Autoparte[10];
+		cantidad = 0;
+		stockMinIndex = 0;
 		inicializado = 1;
 	}
 	
-	private boolean autoparteExistente(int id) {
-		for(int i=0; i<catalogo.size(); i++) {
-			if (catalogo.get(i).getId() == id) { //Si la autoparte está en la lista
+	public boolean autoparteExistente(int id) {
+		for(int i=0; i<cantidad; i++) {
+			if (listaAutopartes[i].getId() == id) { //Si la autoparte está en la lista
 				return true; //devolvemos true
 			}
 		}
 		return false; //si no encontramos la autoparte en la lista, devovlemos false
+	}
+	
+	public Autoparte devolverAutoparte(int id) {
+		for(int i=0; i<cantidad; i++) {
+			if (listaAutopartes[i].getId() == id) { //Si la autoparte está en la lista
+				return listaAutopartes[i];
+			}
+		}
+		return null;
 	}
 	
 	public void listarCatalogo() {
@@ -31,24 +42,31 @@ public class Catalogo {
 			System.out.println("Error, el catálogo no está inicializado.");
 			return;
 		}
-		for (int i=0; i<catalogo.size(); i++) {
-			Autoparte autoparte = catalogo.get(i);
+		boolean existe = false;
+		for (int i=0; i<cantidad; i++) {
+			Autoparte autoparte = listaAutopartes[i];
 			autoparte.mostrarAutoparte();
 			if (autoparte.getStock()==autoparte.getStockMinimo()) {
-				if (!autopartesStockMin.contains(autoparte)) {
-					autopartesStockMin.add(autoparte);
+				for(int k=0; k<stockMinIndex; k++) {
+					if (autopartesStockMin[k]==autoparte) {
+						existe=true;
+						break;
 					}
 				}
-	
+				if(!existe) {
+					autopartesStockMin[stockMinIndex] = autoparte;
+					stockMinIndex++;
+				}
 			}
 		}
-	
+	}
 	
 	public void cargarAutoparte(Autoparte autoparte) {
 		//Si estamos agregando una autoparte ya creada:
 		if (autoparte != null){
 			//la cargamos directamente
-			catalogo.add(autoparte);
+			listaAutopartes[cantidad] = autoparte;
+			cantidad++;
 		}
 		
 		//Si no recibimos una autoparte ya creada como paràmetro:
@@ -165,7 +183,8 @@ public class Catalogo {
 				
 				if (confirmacion.equals("s")) {
 				//Lo cargamos
-				catalogo.add(autoparteNueva);
+				listaAutopartes[cantidad] = autoparteNueva;
+				cantidad++;
 				System.out.println("La autoparte fue cargada con èxito");
 				System.out.println();
 				}
@@ -183,13 +202,14 @@ public class Catalogo {
 		}
 		else {
 			//Buscamos el indice de la autoparte
-			for (int i=0; i<catalogo.size(); i++) {
-				if(catalogo.get(i).getId() == id) {
+			for (int i=0; i<cantidad; i++) {
+				if(listaAutopartes[i].getId() == id) {
 					//Obtenemos la denominaciòn de la autoparte una vez que ya tenemos su ID
-					Autoparte ap = catalogo.get(i);
+					Autoparte ap = listaAutopartes[i];
 					String autoparteDenom =  ap.getDenominacion();
-					//una vez encontrada, simplemente la eliminamos
-					catalogo.remove(ap);
+					//una vez encontrada, simplemente lo reemplazamos por el ultimo elemento de la lista y decrementamos la variable cantidad
+					listaAutopartes[i]=listaAutopartes[cantidad-1];
+					cantidad--;
 					//Eliminamos el objeto Autoparte
 					ap.borrarAutoparte(ap);
 					System.out.println("La autoparte "+autoparteDenom+" fue borrada con èxito");
@@ -206,8 +226,8 @@ public class Catalogo {
 		else {
 			Autoparte autoparte = null;
 			//si existe, la buscamos en la lista
-			for(int i=0; i<catalogo.size(); i++) {
-				autoparte = catalogo.get(i);
+			for(int i=0; i<cantidad; i++) {
+				autoparte = listaAutopartes[i];
 				if (autoparte.getId() == id) {
 					break;
 				}
@@ -220,6 +240,23 @@ public class Catalogo {
 			else {
 				autoparte.modificarDatos();
 			}
+		}
+	}
+	
+	public void restarStock(int id, int cantidad) {
+		if(autoparteExistente(id) == false) {
+			System.out.println("La autoparte que queres modificar no existe.");
+		}
+		else {
+			Autoparte autoparte = null;
+			//si existe, la buscamos en la lista
+			for(int i=0; i<cantidad; i++) {
+				autoparte = listaAutopartes[i];
+				if (autoparte.getId() == id) {
+					break;
+				}
+			}
+			autoparte.restarStock(autoparte, cantidad);
 		}
 	}
 	

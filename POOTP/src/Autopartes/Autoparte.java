@@ -354,5 +354,10 @@ public class Autoparte implements AutoparteInterface{
 		autoparte = null;
 	}
 	
+	@Override
+	public void restarStock(Autoparte autoparte, int cantidad) {
+		autoparte.stock = autoparte.stock - cantidad;
+	}
+	
 }
  
