@@ -13,7 +13,7 @@ import pedido.Pedido;
 import usuario.BaseDeUsuarios;
  
 public class Empresa {
-	
+	public static Catalogo catalogo = new Catalogo();
 	
 	
 	//Método para ingresar al sistema
@@ -104,9 +104,10 @@ public class Empresa {
 		ingresar(base);
 		//Creamos objeto de la clase Scanner
 		Scanner scanner = new Scanner(System.in);
-		//Creamos un objeto de la clase Catalogo y lo inicializamos
-		Catalogo catalogo = new Catalogo();
+		//Inicializamos el catálogo
 		catalogo.inicializarCatalogo();
+		//Creamos objeto de la clase pedido, desde acá vamos a gestionar la creación de nuevos pedidos
+		Pedido pedido = new Pedido();
 		//Variable que sirve para cortar el ciclo del menú
 		int flag=0;
 		
@@ -143,6 +144,8 @@ public class Empresa {
 			System.out.println("[2] Modificar autoparte");
 			System.out.println("[3] Eliminar autoparte");
 			System.out.println("[4] Listar productos");
+			System.out.println("[5] Registrar pedido");
+			System.out.println("[6] Listar pedidos");
 			System.out.println("[-1] Cerrar sesión");
 			System.out.println("[-2] SALIR");
 			System.out.println("ETC. AGREGAR EL RESTO DE FUNCIONALIDADES");
@@ -192,60 +195,26 @@ public class Empresa {
 				break;
 			
 			case 4:
-				int id = 0;
-				int cantidad = 0;
 				catalogo.listarCatalogo();	
 				System.out.println();
-				ArrayList <Autoparte> autopartes = new ArrayList <Autoparte> ();
-				while (id != -1) {
-					System.out.println("Ingresá [ID] de la autoparte que quiere agregar al carrito ");
-					System.out.println("Ingresá [-1] para continuar ");
-					id = scanner.nextInt();
-					if (catalogo.autoparteExistente(id)) {
-						System.out.println("Ingresá la cantidad que quiere agregar: ");
-						cantidad = scanner.nextInt();
-						if (catalogo.devolverAutoparte(id).getStock() >= cantidad) {
-							for(int i = 0; i < cantidad; i++) {
-								autopartes.add(catalogo.devolverAutoparte(id)); // Autoparte se agrega al array la cantidad de veces que se quiera
-							}
-							System.out.println("id " + id + " cantidad " + cantidad);
-							catalogo.restarStock(id, cantidad);
-							
-						}
-						
-					}else {
-						System.out.println("Esa autoparte no existe.");
-					}
-				}
-				if (!autopartes.isEmpty()) {
-					System.out.println("EL PEDIDO ES EL SIGUIENTE: ");
-					int i = 1;
-					for (Autoparte autoparte2 : autopartes) {
-						System.out.println(i + " - " + autoparte2.getDenominacion());
-						i++;
-					}
-					nuevoPedido(autopartes);
-				}
-				
+				break;
+			
+			case 5:
+				pedido.crearPedido();
+				System.out.println("Ingresà cualquier tecla para continuar.");
+				scanner.next();
+				break;
+			
+			case 6:
+				pedido.verPedidos();
+				System.out.println("Ingresà cualquier tecla para continuar.");
+				scanner.next();
 				break;
 			}
+			
 		}
 	}
 
-	private static void nuevoPedido(ArrayList<Autoparte> autopartes) {
-		Scanner scanner = new Scanner(System.in);
-		
-		System.out.println("Ingresá nombre del cliente: ");
-		String username = scanner.next();
-		
-		System.out.println("Ingresá id del cliente: ");
-		int idPedido = scanner.nextInt();
-		
-		Pedido p = new Pedido(username, idPedido, autopartes.size(), new Date(), autopartes);
-		p.registrarPedido(p);
-		
-		
-		
-	}
+	
 	
 }
