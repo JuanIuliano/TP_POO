@@ -116,17 +116,7 @@ public class Tutta {
 	public void cancelarPedido() {
 		Scanner scanner = new Scanner(System.in);
 		if(this.pedidos.size() > 0) {					
-			System.out.println("Pedidos: ");
-			
-			for (Pedido pedido : this.pedidos) {
-				System.out.println("--------------");
-                System.out.println("ID: "+pedido.getIdPedido() + " -- A nombre de: "+pedido.getUsername());
-                System.out.println("Autopartes del pedido: ");
-                for (Map.Entry<Autoparte, Integer> entry : pedido.getAutopartes().entrySet()) {
-                    System.out.println("- " + entry.getKey().getDenominacion() + " - " + entry.getValue());
-                }
-                System.out.println("--------------");
-            }
+			mostrarPedidos();
             
             int flagBorrar = 0;
             while (flagBorrar != -1) {
@@ -159,7 +149,33 @@ public class Tutta {
 			scanner.next();
 		}
 	}
+
 	
+	public void mostrarPedidos() {
+		if(this.pedidos.size() > 0) {					
+			System.out.println("Pedidos: ");
+			
+			for (Pedido pedido : this.pedidos) {
+				System.out.println("--------------");
+                System.out.println("ID: "+pedido.getIdPedido() + " -- A nombre de: "+pedido.getUsername());
+                System.out.println("Autopartes del pedido: ");
+                for (Map.Entry<Autoparte, Integer> entry : pedido.getAutopartes().entrySet()) {
+                    System.out.println("- " + entry.getKey().getDenominacion() + " - " + entry.getValue());
+                }
+                System.out.println("--------------");
+            }
+		}
 	
+	}
+	
+	public Pedido devolverPedido(int id) {
+		for(Pedido pedido : pedidos) {
+			if(pedido.getIdPedido() == id) {
+				return pedido;
+			}
+		}
+		return null;
+		
+	}
 }
 

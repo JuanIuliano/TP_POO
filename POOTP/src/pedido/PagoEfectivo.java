@@ -1,7 +1,7 @@
 package pedido;
 
 public class PagoEfectivo extends Pago{
-	double descuento;
+	double descuento = 10;
 
 	@Override
 	public double montoFinal(double montoInicial) {

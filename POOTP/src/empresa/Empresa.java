@@ -148,6 +148,7 @@ public class Empresa {
 			System.out.println("[3] Eliminar autoparte");
 			System.out.println("[4] Listar productos / Reservar pedido");
 			System.out.println("[5] Listar/Cancelar pedidos");
+			System.out.println("[6] Registrar venta");
 			System.out.println();
 			System.out.println("[-1] Cerrar sesión");
 			System.out.println("[-2] SALIR");
@@ -200,9 +201,40 @@ public class Empresa {
 				t.crearPedido();
 				break;
 				
-			case 5:
+			case 5: //Ver pedidos / Cancelar pedidos
 				t.cancelarPedido();
 				break;
+				
+			case 6: //Registrar venta
+				t.mostrarPedidos();
+				System.out.println();
+				boolean existe = false;
+				Pedido p = null;
+				
+				while (!existe) {
+					System.out.println("Ingrese el ID del pedido a vender");
+					int idP = scanner.nextInt();
+					p = t.devolverPedido(idP);
+					if(p != null){
+						break;
+					}
+					else {
+						System.out.println("No existe un pedido con ese ID, ingrese otro.");
+					}
+				}
+				
+				//Registramos la venta
+				Venta venta = new Venta();
+				if(p != null) {
+					venta.registrarVenta(p);
+				}
+				else {
+					System.out.println("Ocurrió un error.");
+				}
+				break;
+				
+				
+				
 			}
 		}
 	}
