@@ -5,7 +5,6 @@ import java.util.Scanner;
 import Autopartes.Autoparte;
 
 public class Venta {
-	
 	Pedido pedido;
 	String medioPago;
 	double montoInicial;
@@ -13,12 +12,86 @@ public class Venta {
 	Scanner sc = new Scanner(System.in);
 	
 	
+	
+	
+	public Venta(Pedido pedido, String medioPago, double montoInicial, double montoFinal) {
+		super();
+		this.pedido = pedido;
+		this.medioPago = medioPago;
+		this.montoInicial = montoInicial;
+		this.montoFinal = montoFinal;
+	}
+
+
+
+
+	public Venta() {}
+
+
+
+
+	public Pedido getPedido() {
+		return pedido;
+	}
+
+
+
+
+	public void setPedido(Pedido pedido) {
+		this.pedido = pedido;
+	}
+
+
+
+
+	public String getMedioPago() {
+		return medioPago;
+	}
+
+
+
+
+	public void setMedioPago(String medioPago) {
+		this.medioPago = medioPago;
+	}
+
+
+
+
+	public double getMontoInicial() {
+		return montoInicial;
+	}
+
+
+
+
+	public void setMontoInicial(double montoInicial) {
+		this.montoInicial = montoInicial;
+	}
+
+
+
+
+	public double getMontoFinal() {
+		return montoFinal;
+	}
+
+
+
+
+	public void setMontoFinal(double montoFinal) {
+		this.montoFinal = montoFinal;
+	}
+
+
+
+
 	public void registrarVenta(Pedido p){
 		//Calcular el precio sumando todas las autopartes del pedido
 		//Obtenemos la lista de autopartes del pedido
 		Map <Autoparte, Integer>autopartes = p.getAutopartes();
-		//Rcorremos las autopartes y acumulamos el precio de todas
 		
+		//Rcorremos las autopartes y acumulamos el precio de todas
 		for (Map.Entry<Autoparte, Integer> entry : autopartes.entrySet()) {
             montoInicial = (entry.getKey().getPrecioUnitario() * entry.getValue()) + montoInicial;
          }
@@ -33,23 +106,31 @@ public class Venta {
 		case 1:
 			PagoEfectivo pagoef = new PagoEfectivo();
 			montoFinal = pagoef.montoFinal(montoInicial);
+			medioPago = "efectivo";
 			break;
 		
 		case 2:
 			PagoDebito pagodeb = new PagoDebito();
 			montoFinal = pagodeb.montoFinal(montoInicial);
+			medioPago = "Débito";
 			break;
 			
 		case 3:
 			PagoTarjeta pagotar = new PagoTarjeta();
 			montoFinal = pagotar.montoFinal(montoInicial);
+			medioPago = "Crédito";
 			break;
 		}
 		System.out.println("EL MONTO FINAL A ABONAR ES: "+montoFinal);
 		System.out.println("Confirmar venta (s/n)");
 		String conf = sc.next();
 		if (conf.equals("s")){
+			Venta v = new Venta(p, medioPago, montoInicial, montoFinal);
 			System.out.println("Venta realizada.");
+			System.out.println();
+			System.out.println("Generando recibo..");
+			Recibo r = new Recibo();
+			r.generarRecibo(v);
 		}
 		else {
 			System.out.println("Venta cancelada");

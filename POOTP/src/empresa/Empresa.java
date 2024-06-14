@@ -12,11 +12,14 @@ import java.time.format.DateTimeFormatter;
 import Autopartes.Autoparte;
 import Autopartes.Catalogo;
 import pedido.Pedido;
+import pedido.Recibo;
 import pedido.Venta;
 import usuario.BaseDeUsuarios;
  
 public class Empresa {
 	public static Catalogo catalogo = new Catalogo();
+	//Creamos objeto Tutta para gestionar pedidos y ventas
+	public static Tutta t = new Tutta();
 	
 
 	//Método para ingresar al sistema
@@ -101,8 +104,8 @@ public class Empresa {
 		//Iniciamos sesión
 		BaseDeUsuarios base = new BaseDeUsuarios();
 		//Añadimos un usuario a modo de ejemplo
-				Usuario ejemplo = new Usuario(base.getCantidadDeUsuarios(), "ejemplo", "ejemplo123", "ejemplo@gmail.com");
-				base.agregarUsuario(ejemplo);
+		Usuario ejemplo = new Usuario(base.getCantidadDeUsuarios(), "ejemplo", "ejemplo123", "ejemplo@gmail.com");
+		base.agregarUsuario(ejemplo);
 		ingresar(base);
 		//Creamos objeto de la clase Scanner
 		Scanner scanner = new Scanner(System.in);
@@ -233,7 +236,8 @@ public class Empresa {
 				}
 				break;
 				
-				
+			case 7:
+				t.mostrarClientes();
 				
 			}
 		}

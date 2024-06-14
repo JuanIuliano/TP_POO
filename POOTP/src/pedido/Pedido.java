@@ -1,37 +1,36 @@
 package pedido;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import Autopartes.Autoparte;
+import cliente.Cliente;
+import empresa.Empresa;
 
 
 public class Pedido {
 
-	private String username;
+	//private String username;
+	private Cliente cliente;
 	private int idPedido;
 	private int cantArticulos;
 	private Date fecha;
 	private Map <Autoparte, Integer> autopartes;
 	
-	public Pedido(String username, int idPedido, int cantArticulos, Date fecha, Map<Autoparte, Integer> autopartes) {
-		this.username = username;
+	public Pedido(Cliente cliente, int idPedido, int cantArticulos, Date fecha, Map<Autoparte, Integer> autopartes) {
+		this.cliente = cliente;
 		this.idPedido = idPedido;
 		this.cantArticulos = cantArticulos;
 		this.fecha = fecha;
 		this.autopartes = autopartes;
 	}
 	
-	
-	
-	public String getUsername() {
-		return username;
+
+
+	public Cliente getCliente() {
+		return cliente;
 	}
-
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 
 	public int getIdPedido() {
 		return idPedido;
@@ -82,5 +81,14 @@ public class Pedido {
 	public void cancelarPedido(Pedido p) {
 		System.out.println("cancelar pedidooo");
 	}
+	
+	public void mostrarPedido() {
+		for (Map.Entry<Autoparte, Integer> entry : this.getAutopartes().entrySet()) {
+            System.out.println("- " + entry.getKey().getDenominacion() + " - " + entry.getValue());
+        }
+	}
+	
+
+	
 	
 }

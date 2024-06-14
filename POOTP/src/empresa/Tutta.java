@@ -8,16 +8,20 @@ import java.util.Scanner;
 import Autopartes.Autoparte;
 import pedido.Pedido;
 import pedido.Venta;
+import cliente.Cliente;
 
 public class Tutta {
 	private ArrayList <Pedido> pedidos;
 	private ArrayList <Venta> ventas;
-	private int id;
+	private ArrayList <Cliente> clientes;
+	public int cantidadPedidos;
+	public int cantidadClientes = 0;
 	
 	
 	public Tutta() {
 		this.pedidos = new ArrayList <Pedido> ();
 		this.ventas = new ArrayList <Venta> ();
+		this.clientes = new ArrayList <Cliente>();
 	}
 
 
@@ -46,6 +50,7 @@ public class Tutta {
 		}
 	}
 	
+	
 	public void crearPedido() {
 		Scanner scanner = new Scanner(System.in);
 		int id = 0;
@@ -53,6 +58,79 @@ public class Tutta {
 		Empresa.catalogo.listarCatalogo();	
 		System.out.println();
 		Map<Autoparte, Integer> autopartes = new HashMap <Autoparte, Integer> ();
+		int opc;
+		Cliente cliente = null;
+		
+		//Seleccionamos el cliente que reservará el pedido/si no existe lo creamos
+		System.out.println("CREANDO PEDIDO");
+		System.out.println("[1] Cliente existente");
+		System.out.println("[2] Nuevo cliente");
+		while (true) {
+			System.out.println("Seleccione una opción: ");
+		    opc = scanner.nextInt();
+			if (opc != 1 && opc != 2) {
+				System.out.println("Opción incorrecta");
+			}
+			else {
+				break;
+			}
+		}
+		if(opc==1) {
+			while(true) {
+				System.out.println("Ingresá el nombre y apellido del usuario:");
+				scanner.next();
+				String nomap = scanner.nextLine();
+				System.out.println("Ingresá el ID del usuario:");
+				int idcl = scanner.nextInt();
+				Cliente c = this.getCliente(nomap, idcl);
+				if(c != null) {
+					System.out.println("El cliente existe.");
+					cliente = c;
+					System.out.println();
+					break;
+				}
+				else {
+					System.out.println("Error, el cliente no existe");
+				}
+			}
+		}
+		
+		else {
+			System.out.println("Creando cliente..");
+			System.out.println("Ingrese el nombre y apellido del cliente:");
+			scanner.next();
+			String nombreApellido = scanner.nextLine();
+			System.out.println("Ingrese el teléfono del cliente:");
+			String telefono = scanner.nextLine();
+			System.out.println("Ingrese la provincia del cliente:");
+			String provincia = scanner.nextLine();
+			System.out.println("Ingrese la localidad del cliente:");
+			String localidad = scanner.nextLine();
+			System.out.println("Ingrese la dirección del cliente (calle + número + código postal):");
+			String direccion = scanner.nextLine();
+			System.out.println("Ingrese el mail del cliente:");
+			String mail = scanner.nextLine();
+			System.out.println();
+			int idC = this.cantidadClientes+1;
+			
+			//creamos cliente con estos parámetros
+			cliente = new Cliente(idC, nombreApellido, direccion, telefono, localidad, provincia, mail);
+			
+			//Chequeamos que el cliente no esté registrado
+			if(this.clienteExistente(cliente)) {
+				//si está registrado mosotramos error por pantalla
+				System.out.println("Error, el cliente ya está registrado.");
+			}
+			else {
+				this.agregarCliente(cliente);
+				System.out.println("CLIENTE REGISTRADO CON ÉXITO!");
+				System.out.println("El ID del cliente es: "+idC);
+				System.out.println();
+				this.cantidadClientes++;
+			}
+		}
+		
+		
 		
 		while (id != -1) {
 			System.out.println("Ingresá [ID] de la autoparte que quiere agregar al carrito ");
@@ -97,20 +175,19 @@ public class Tutta {
                 System.out.println(i + " - " + entry.getKey().getDenominacion() + " - " + entry.getValue());
                 i++;
              }
-			
-			
-			//Agregamos la información del usuario
+
 			System.out.println();
-			System.out.println("Ingresá nombre del cliente: ");
-			String username = scanner.next();
-			int idPedido = this.id + 1;
-			this.id++;
+			int idPedido = this.cantidadPedidos;
+			this.cantidadPedidos++;
+			System.out.println("Pedido registrado con éxito.");
+			System.out.println();
 			
 			//Creamos el objeto pedido y lo agregamos a la lista de pedidos
-			Pedido p = new Pedido(username, idPedido, autopartes.size(), new Date(), autopartes);
+			Pedido p = new Pedido(cliente, idPedido, autopartes.size(), new Date(), autopartes);
 			this.agregarPedido(p);
 		}
 	}
+	
 	
 	
 	public void cancelarPedido() {
@@ -157,7 +234,7 @@ public class Tutta {
 			
 			for (Pedido pedido : this.pedidos) {
 				System.out.println("--------------");
-                System.out.println("ID: "+pedido.getIdPedido() + " -- A nombre de: "+pedido.getUsername());
+                System.out.println("ID: "+pedido.getIdPedido() + " -- A nombre de: "+pedido.getCliente().getNombreApellido());
                 System.out.println("Autopartes del pedido: ");
                 for (Map.Entry<Autoparte, Integer> entry : pedido.getAutopartes().entrySet()) {
                     System.out.println("- " + entry.getKey().getDenominacion() + " - " + entry.getValue());
@@ -175,7 +252,44 @@ public class Tutta {
 			}
 		}
 		return null;
+	}
+	
+	
+	public boolean clienteExistente(Cliente cliente) {
+		for(Cliente c : clientes) {
+			if (c == cliente) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void agregarCliente(Cliente cliente) {
+		clientes.add(cliente);
+		cantidadClientes++;
+	}
+	
+	public Cliente getCliente(String nombreApellido, int id) {
+		for(Cliente c : clientes) {
+			if(c.getNombreApellido().equals(nombreApellido) && c.getId() == id) {
+				return c;
+			}
+		}
+		return null;
+	}
+	
+	public void mostrarClientes() {
+		for(Cliente c : clientes) {
+			System.out.println("ID: "+c.getId());
+			System.out.println("Nombre y Apellido: "+c.getNombreApellido());
+			System.out.println("Provincia: "+c.getProvincia());
+			System.out.println("Direccion: "+c.getDireccion());
+			System.out.println();
+			System.out.println();
+		}
 		
 	}
+	
+	
 }
 
