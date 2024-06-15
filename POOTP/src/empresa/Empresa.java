@@ -214,18 +214,106 @@ public class Empresa {
 				scanner.next();
 				break;
 			
-			case 4: //Listar catálogo - crear pedidos
+			case 4: //Listar catálogo - crear pedidos o venta directa
 				int menu = 0;
-				while(menu != 1 && menu != 2) {
+				catalogo.listarCatalogo();
+				/**/
+				int ida = 0;
+				int cantidad = 0;
+				
+				//inicializamos carrito
+				Map<Autoparte, Integer> autopartes = new HashMap <Autoparte, Integer> ();
+				int opc;
+				Cliente cliente = null;
+				
+				//Seleccionamos el cliente que reservará el pedido/si no existe lo creamos
+				System.out.println("CREANDO CARRITO");
+				System.out.println("[1] Cliente existente");
+				System.out.println("[2] Nuevo cliente");
+				System.out.println("[3] Ir al menú");
+				while (true) {
+					System.out.println("Seleccione una opción: ");
+				    opc = scanner.nextInt();
+					if (opc != 1 && opc != 2 && opc != 3) {
+						System.out.println("Opción incorrecta");
+					}
+					else {
+						break;
+					}
+				}
+				if(opc == 1) {
+					if (t.getClientes().size() != 0) {
+						t.mostrarClientes();
+						cliente = t.seleccionarCliente();
+					}
+					else {
+						System.out.println("No hay clientes cargados en el sistema.");
+						System.out.println("presione cualquier tecla para continuar...");
+						ida = -1; //necesario para que no se pueda hacer un pedido, sin este paso se crearía un pedido sin cliente.
+						scanner.next();
+					}
+				}else if(opc == 2){
+					cliente = t.crearCliente();
+				}else {
+					System.out.println("Presione cualquier tecla para continuar");
+					scanner.next();
+					break;
+				}
+				
+				
+				while (ida != -1) {
+					System.out.println("Ingresá [ID] de la autoparte que quiere agregar al carrito ");
+					if (autopartes.size() > 0) {							
+						System.out.println("Ingresá [-1] para continuar ");
+					}else {
+						System.out.println("Ingresá [-1] para salir ");
+					}
+					ida = scanner.nextInt();
+					if(ida == -1) {
+						if (autopartes.size() > 0) {
+							ida = 0; //necesario para que no se pueda hacer un peido, sin este paso se crearía un pedido sin cliente.							
+						}
+						break;
+					}
+					//Si la autoparte en cuestión existe pedimos la cantidad a reservar
+					if (Empresa.catalogo.autoparteExistente(ida)) {
+						System.out.println("Ingresá la cantidad que quiere agregar: ");
+						cantidad = scanner.nextInt();
+						System.out.println();
+						//Calculamos si la cantidad a reservar no excede al stock
+						if (Empresa.catalogo.devolverAutoparte(ida).getStock() >= cantidad) {
+							//Obtenemos el objeto autoparte correspondiente a el ID
+							Autoparte autoparteExistente = Empresa.catalogo.devolverAutoparte(ida);
+							//Lo agregamos al hashmap (obtenemos la cantidad actual y le sumamos la nueva)
+		                    autopartes.put(autoparteExistente, autopartes.getOrDefault(autoparteExistente, 0) + cantidad);
+		                    //Actualizamos stock
+		                    Empresa.catalogo.restarStock(ida, cantidad);
+		                    System.out.println("id " + ida + " cantidad " + cantidad);
+		                    System.out.println();
+						}
+						else {
+							System.out.println("Error al realizar la reserva, las cantidades exceden al stock.");
+							System.out.println();
+						}
+						
+					}
+					else {
+						System.out.println("Esa autoparte no existe.");
+						System.out.println();
+					}
+				}
+				
+				/**/
+				while(menu != 1 && menu != 2 && ida != -1) {
 					System.out.println("[1] crear un pedido");
 					System.out.println("[2] crear una venta");
 					menu = scanner.nextInt();
 				}
 				if (menu == 1) {
-					t.crearPedido();
+					t.crearPedido(autopartes, cliente);
 					
 				}else if (menu == 2){
-					t.crearVentaDirecta();					
+					t.crearVentaDirecta(autopartes, cliente);					
 				}
 				break;
 				
@@ -272,15 +360,15 @@ public class Empresa {
 				if(t.getClientes().size() != 0) {
 					t.mostrarClientes();
 					int op = 0;
-					int id = 0;
+					int id1 = 0;
 					while(true) {
 						System.out.println("Ingrese el [ID] del cliente que quiera ver sus pedidos: ");
 						System.out.println("Presione [-1] para salir.");
-						id = scanner.nextInt();
-						if (id == -1) {
+						id1 = scanner.nextInt();
+						if (id1 == -1) {
 							break;
 						}
-						Cliente c = t.getClienteId(id);
+						Cliente c = t.getClienteId(id1);
 						if(c != null) {
 							boolean hayPedidos = false;
 							for (Pedido pedido : t.getPedidos()) {

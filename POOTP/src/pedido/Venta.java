@@ -124,7 +124,8 @@ public class Venta implements Serializable{
 			break;
 		}
 		System.out.println("EL MONTO FINAL A ABONAR ES: "+montoFinal);
-		System.out.println("Confirmar venta (s/n)");
+		System.out.println("[s] Confirmar venta");
+		System.out.println("Cualquier tecla para cancelar");
 		String conf = sc.next();
 		if (conf.equals("s")){
 			Venta v = new Venta(p, medioPago, montoInicial, montoFinal);
