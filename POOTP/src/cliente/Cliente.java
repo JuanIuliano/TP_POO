@@ -1,10 +1,12 @@
 package cliente;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
 import empresa.Empresa;
 
-public class Cliente {
+public class Cliente implements Serializable{
+	private static final long serialVersionUID = 1L;
 	int id;
 	String nombreApellido;
 	String direccion; //Calle + número + código postal
@@ -12,7 +14,6 @@ public class Cliente {
 	String localidad;
 	String provincia;
 	String mail;
-	Scanner scanner = new Scanner(System.in);
 	
 	
 	
@@ -72,13 +73,6 @@ public class Cliente {
 		this.mail = mail;
 	}
 
-	public Scanner getScanner() {
-		return scanner;
-	}
-
-	public void setScanner(Scanner scanner) {
-		this.scanner = scanner;
-	}
 
 	
 	

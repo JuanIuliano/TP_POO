@@ -1,15 +1,16 @@
 package pedido;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Scanner;
 import Autopartes.Autoparte;
 
-public class Venta {
+public class Venta implements Serializable{
+	private static final long serialVersionUID = 1L;
 	Pedido pedido;
 	String medioPago;
 	double montoInicial;
 	double montoFinal;
-	Scanner sc = new Scanner(System.in);
 	
 	
 	
@@ -87,6 +88,7 @@ public class Venta {
 
 
 	public void registrarVenta(Pedido p){
+		Scanner sc = new Scanner(System.in);
 		//Calcular el precio sumando todas las autopartes del pedido
 		//Obtenemos la lista de autopartes del pedido
 		Map <Autoparte, Integer>autopartes = p.getAutopartes();

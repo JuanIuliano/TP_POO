@@ -1,5 +1,6 @@
 package pedido;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,9 +10,8 @@ import cliente.Cliente;
 import empresa.Empresa;
 
 
-public class Pedido {
-
-	//private String username;
+public class Pedido implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private Cliente cliente;
 	private int idPedido;
 	private int cantArticulos;

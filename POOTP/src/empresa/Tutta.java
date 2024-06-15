@@ -1,5 +1,12 @@
 package empresa;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,19 +17,52 @@ import pedido.Pedido;
 import pedido.Venta;
 import cliente.Cliente;
 
-public class Tutta {
-	private ArrayList <Pedido> pedidos;
-	private ArrayList <Venta> ventas;
-	private ArrayList <Cliente> clientes;
+public class Tutta implements Serializable{
+	private static final long serialVersionUID = 1L;
+	private ArrayList <Pedido> pedidos = new ArrayList<>();
+	private ArrayList <Venta> ventas = new ArrayList<>();
+	private ArrayList <Cliente> clientes = new ArrayList<>();
 	public int cantidadPedidos;
 	public int cantidadClientes = 0;
 	
 	
 	public Tutta() {
-		this.pedidos = new ArrayList <Pedido> ();
-		this.ventas = new ArrayList <Venta> ();
-		this.clientes = new ArrayList <Cliente>();
 	}
+	
+	//SERIALIZAR
+	public void guardarBBDD() throws IOException {
+        try (
+            FileOutputStream fileOutputStream = new FileOutputStream("BBDD.txt");
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)
+        ) {
+            objectOutputStream.writeObject(this);
+            System.out.println("Base de datos guardada con éxito.");
+        }
+    }
+ 
+	
+	//CARGAR OBJETO CON ARCHIVO SERIALIZADO
+	 public static Tutta cargarBBDD() throws IOException, ClassNotFoundException{
+		 Tutta t = null;
+		 try (FileInputStream fileInputStream = new FileInputStream("BBDD.txt");
+	             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+	            System.out.println("Base de datos cargada con éxito.");
+	            t = (Tutta) objectInputStream.readObject();
+	        } catch (FileNotFoundException e) {
+	            System.out.println("Archivo de base de datos no existe, creando nueva base de datos");
+	            t = new Tutta(); // Si el archivo no existe, crear una nueva instancia vacía
+	        } catch (IOException | ClassNotFoundException e) {
+	            e.printStackTrace();
+	        }
+
+	        if (t == null) {
+	            t = new Tutta(); // Por si ocurre alguna excepción inesperada
+	        }
+
+	        return t;
+	    }
+
+
 
 
 	public ArrayList<Pedido> getPedidos() {

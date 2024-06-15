@@ -1,8 +1,10 @@
 package Autopartes;
+import java.io.Serializable;
 import java.util.Scanner;
  
-public class Autoparte implements AutoparteInterface{
+public class Autoparte implements AutoparteInterface, Serializable{
 	//-------------ATRIBUTOS-------------//
+	private static final long serialVersionUID = 1L;
 	int id;
 	String denominacion;
 	String descripcion;

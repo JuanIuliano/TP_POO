@@ -1,14 +1,14 @@
 package empresa;
-import usuario.Usuario;
 
+import usuario.Usuario;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
 import Autopartes.Autoparte;
 import Autopartes.Catalogo;
 import cliente.Cliente;
@@ -19,8 +19,6 @@ import usuario.BaseDeUsuarios;
  
 public class Empresa {
 	public static Catalogo catalogo = new Catalogo();
-	//Creamos objeto Tutta para gestionar pedidos y ventas
-	public static Tutta t = new Tutta();
 	
 
 	//Método para ingresar al sistema
@@ -101,19 +99,27 @@ public class Empresa {
 	
 	public static void main(String[] args) {
 		
-		
 		//Iniciamos sesión
 		BaseDeUsuarios base = new BaseDeUsuarios();
 		//Añadimos un usuario a modo de ejemplo
 		Usuario ejemplo = new Usuario(base.getCantidadDeUsuarios(), "ejemplo", "ejemplo123", "ejemplo@gmail.com");
 		base.agregarUsuario(ejemplo);
 		ingresar(base);
+		//Cargamos la base de datos
+		Tutta t = null;
+		try {
+			t = Tutta.cargarBBDD();
+		} 
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 		//Creamos objeto de la clase Scanner
 		Scanner scanner = new Scanner(System.in);
 		//Inicializamos catálogo
 		catalogo.inicializarCatalogo();
-		//Creamos objeto Tutta para gestionar pedidos y ventas
-		Tutta t = new Tutta();
 		//Variable que sirve para cortar el ciclo del menú
 		int flag=0;
 		
@@ -168,6 +174,12 @@ public class Empresa {
 			case -2: //Finalizar programa
 				System.out.println();
 				System.out.println();
+				//SERIALIZAMOS LOS DATOS 
+				try {
+					t.guardarBBDD();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				System.out.println("Programa finalizado.");
 				flag=1;
 				break;
