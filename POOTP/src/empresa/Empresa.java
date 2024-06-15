@@ -156,10 +156,10 @@ public class Empresa {
 			System.out.println("[1] Cargar autoparte");
 			System.out.println("[2] Modificar autoparte");
 			System.out.println("[3] Eliminar autoparte");
-			System.out.println("[4] Listar productos / Reservar pedido");
-			System.out.println("[5] Listar/Cancelar pedidos");
-			System.out.println("[6] Registrar venta");
-			System.out.println("[7] Listar clientes"); //ver sus respectivos pedidos
+			System.out.println("[4] Listar productos / Reservar pedido / Venta directa");
+			System.out.println("[5] Listar / Cancelar pedidos");
+			System.out.println("[6] Registrar venta con pedido previo");
+			System.out.println("[7] Listar clientes / Ver pedidos asociados"); //ver sus respectivos pedidos
 			System.out.println();
 			System.out.println("[-1] Cerrar sesión");
 			System.out.println("[-2] SALIR");
@@ -174,6 +174,8 @@ public class Empresa {
 			case -2: //Finalizar programa
 				System.out.println();
 				System.out.println();
+				//Guardamos el catalogo en Tutta para después serialziarlo
+				t.setCatalogo(catalogo.getCatalogo());
 				//SERIALIZAMOS LOS DATOS 
 				try {
 					t.guardarBBDD();
@@ -271,7 +273,7 @@ public class Empresa {
 					ida = scanner.nextInt();
 					if(ida == -1) {
 						if (autopartes.size() > 0) {
-							ida = 0; //necesario para que no se pueda hacer un peido, sin este paso se crearía un pedido sin cliente.							
+							ida = 0; //necesario para que no se pueda hacer un pedido, sin este paso se crearía un pedido sin cliente.							
 						}
 						break;
 					}
@@ -317,9 +319,11 @@ public class Empresa {
 				}
 				break;
 				
+				
 			case 5: //Ver pedidos / Cancelar pedidos
 				t.cancelarPedido();
 				break;
+				
 				
 			case 6: //Registrar venta
 				if(t.pedidosVacio() == false) {

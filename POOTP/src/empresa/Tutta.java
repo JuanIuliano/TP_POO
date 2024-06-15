@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import Autopartes.Autoparte;
+import Autopartes.Catalogo;
 import pedido.PagoDebito;
 import pedido.PagoEfectivo;
 import pedido.PagoTarjeta;
@@ -27,13 +28,15 @@ public class Tutta implements Serializable{
 	private ArrayList <Pedido> pedidos = new ArrayList<>();
 	private ArrayList <Venta> ventas = new ArrayList<>();
 	private ArrayList <Cliente> clientes = new ArrayList<>();
+	private static ArrayList <Autoparte> catalogo = new ArrayList<>();
 	public int cantidadPedidos;
 	public int cantidadClientes = 0;
 	
-	
+	// CONSTRUCTOR SIN PARAMÉTROS----------------------------------------------------------------
 	public Tutta() {
 	}
 	
+	// MÉTODOS PARA GUARDAR Y CARGAR OBJETO ------------------------------------------------------------------------------
 	//SERIALIZAR
 	public void guardarBBDD() throws IOException {
         try (
@@ -66,39 +69,21 @@ public class Tutta implements Serializable{
 
 	        return t;
 	    }
-
-
-
-
-	public ArrayList<Pedido> getPedidos() {
-		return pedidos;
+	 
+	 
+	 // MÉTODOS DE CATALOGO/AUTOPARTES ---------------------------------------------------------------------------------------------
+	public static ArrayList<Autoparte> getCatalogo(){
+		return catalogo;
 	}
-
-
-	public void setPedidos(ArrayList<Pedido> pedidos) {
-		this.pedidos = pedidos;
-	}
-
-
-	public ArrayList<Venta> getVentas() {
-		return ventas;
-	}
-
-
-	public void setVentas(ArrayList<Venta> ventas) {
-		this.ventas = ventas;
+		
+	public void setCatalogo(ArrayList<Autoparte> catalogo) {
+		Tutta.catalogo = catalogo;
 	}
 	
-	public void agregarPedido(Pedido p) {
-		if(p != null) {
-			this.pedidos.add(p);
-		}
-	}
+
+
 	
-	public ArrayList<Cliente> getClientes() {
-		return clientes;
-	}
-	
+	 // MÉTODOS DE CLIENTES -----------------------------------------------------------------------------
 	public Cliente crearCliente() {
 		Scanner scanner = new Scanner(System.in);
 		
@@ -161,6 +146,52 @@ public class Tutta implements Serializable{
 		}
 	}
 	
+	public boolean clienteExistente(Cliente cliente) {
+		for(Cliente c : clientes) {
+			if (c == cliente) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void agregarCliente(Cliente cliente) {
+		clientes.add(cliente);
+		cantidadClientes++;
+	}
+	
+	public Cliente getCliente(String nombreApellido, int id) {
+		for(Cliente c : clientes) {
+			if(c.getNombreApellido().equals(nombreApellido) && c.getId() == id) {
+				return c;
+			}
+		}
+		return null;
+	}
+	
+	public Cliente getClienteId(int id) {
+		for(Cliente c : clientes) {
+			if(c.getId() == id) {
+				return c;
+			}
+		}
+		return null;
+	}
+	
+	public void mostrarClientes() {
+		for(Cliente c : clientes) {
+			System.out.println("ID: "+c.getId());
+			System.out.println("Nombre y Apellido: "+c.getNombreApellido());
+			System.out.println("Provincia: "+c.getProvincia());
+			System.out.println("Direccion: "+c.getDireccion());
+			System.out.println("--------------------------------");
+			System.out.println();
+		}
+		
+	}
+	
+	
+	// MÉTODOS DE PEDIDOS -----------------------------------------------------------------------------
 	public void crearPedido(Map<Autoparte, Integer> autopartes, Cliente cliente) {
 		Scanner scanner = new Scanner(System.in);
 		//Si el hashmap del pedido no esta vacío, es decir, si cargamos autopartes al pedido
@@ -260,50 +291,8 @@ public class Tutta implements Serializable{
 	}
 	
 	
-	public boolean clienteExistente(Cliente cliente) {
-		for(Cliente c : clientes) {
-			if (c == cliente) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public void agregarCliente(Cliente cliente) {
-		clientes.add(cliente);
-		cantidadClientes++;
-	}
-	
-	public Cliente getCliente(String nombreApellido, int id) {
-		for(Cliente c : clientes) {
-			if(c.getNombreApellido().equals(nombreApellido) && c.getId() == id) {
-				return c;
-			}
-		}
-		return null;
-	}
-	
-	public Cliente getClienteId(int id) {
-		for(Cliente c : clientes) {
-			if(c.getId() == id) {
-				return c;
-			}
-		}
-		return null;
-	}
-	
-	public void mostrarClientes() {
-		for(Cliente c : clientes) {
-			System.out.println("ID: "+c.getId());
-			System.out.println("Nombre y Apellido: "+c.getNombreApellido());
-			System.out.println("Provincia: "+c.getProvincia());
-			System.out.println("Direccion: "+c.getDireccion());
-			System.out.println("--------------------------------");
-			System.out.println();
-		}
-		
-	}
-	
+
+	// MÉTODOS DE VENTA -------------------------------------------------------------------------------------------------------
 	public void crearVentaDirecta(Map<Autoparte, Integer> autopartes, Cliente cliente) {
 		Scanner scanner = new Scanner(System.in);
 		//Si el hashmap del carrito no esta vacío, es decir, si cargamos autopartes al carrito
@@ -369,6 +358,38 @@ public class Tutta implements Serializable{
 			return;
 			
 		}
+	}
+	
+	
+	
+	// GETTERS Y SETTERS -----------------------------------------------------
+	public ArrayList<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+
+	public void setPedidos(ArrayList<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
+
+
+	public ArrayList<Venta> getVentas() {
+		return ventas;
+	}
+
+
+	public void setVentas(ArrayList<Venta> ventas) {
+		this.ventas = ventas;
+	}
+	
+	public void agregarPedido(Pedido p) {
+		if(p != null) {
+			this.pedidos.add(p);
+		}
+	}
+	
+	public ArrayList<Cliente> getClientes() {
+		return clientes;
 	}
 	
 	
