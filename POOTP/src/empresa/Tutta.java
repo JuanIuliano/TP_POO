@@ -21,6 +21,7 @@ import pedido.Pedido;
 import pedido.Recibo;
 import pedido.Venta;
 import pedido.VentaDirecta;
+import usuario.Usuario;
 import cliente.Cliente;
 
 public class Tutta implements Serializable{
@@ -29,6 +30,7 @@ public class Tutta implements Serializable{
 	private ArrayList <Venta> ventas = new ArrayList<>();
 	private ArrayList <Cliente> clientes = new ArrayList<>();
 	private ArrayList <Autoparte> catalogo = new ArrayList<>();
+	private ArrayList <Usuario> listaUsuarios = new ArrayList<>();
 	public int cantidadPedidos;
 	public int cantidadClientes = 0;
 	
@@ -48,12 +50,7 @@ public class Tutta implements Serializable{
         }
     }
 	
-	public void mostrarCatalogo() {
-		System.out.println(catalogo.size());
-		System.out.println(pedidos.size());
-		System.out.println(clientes.size());
-	}
- 
+
 	
 	//CARGAR OBJETO CON ARCHIVO SERIALIZADO
 	 public static Tutta cargarBBDD() throws IOException, ClassNotFoundException{
@@ -72,6 +69,10 @@ public class Tutta implements Serializable{
 	        if (t == null) {
 	            t = new Tutta(); // Por si ocurre alguna excepción inesperada
 	        }
+	        
+	        if (t.listaUsuarios == null) {
+	            t.listaUsuarios = new ArrayList<>();
+	        }
 
 	        return t;
 	    }
@@ -85,7 +86,15 @@ public class Tutta implements Serializable{
 	public void setCatalogo(ArrayList<Autoparte> catalogo) {
 		this.catalogo = catalogo;
 	}
+
+	 // MÉTODOS DE USUARIOS/BASEDEUSUARIOS ---------------------------------------------------------------------------------------------
+	public ArrayList<Usuario> getListaUsuario(){
+		return this.listaUsuarios;
+	}
 	
+	public void setListaUsuario(ArrayList<Usuario> baseDeUsuarios){
+		this.listaUsuarios = baseDeUsuarios;
+	}
 
 
 	

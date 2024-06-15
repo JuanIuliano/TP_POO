@@ -98,18 +98,10 @@ public class Empresa {
 	}
 	
 	public static void main(String[] args) {
-		
-		//Iniciamos sesión
-		BaseDeUsuarios base = new BaseDeUsuarios();
-		//Añadimos un usuario a modo de ejemplo
-		Usuario ejemplo = new Usuario(base.getCantidadDeUsuarios(), "ejemplo", "ejemplo123", "ejemplo@gmail.com");
-		base.agregarUsuario(ejemplo);
-		ingresar(base);
 		//Cargamos la base de datos
 		Tutta t = null;
 		try {
 			t = Tutta.cargarBBDD();
-			t.mostrarCatalogo();
 		} 
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -117,6 +109,16 @@ public class Empresa {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		//Iniciamos sesión
+		BaseDeUsuarios base = new BaseDeUsuarios();
+		base.iniciarBaseDeUsuarios();
+		//Cargamos a la lista de usuarios los usuarios existentes
+		base.setListaUsuarios(t.getListaUsuario());
+		//Llamamos al método para iniciar sesión
+		ingresar(base);		
+		
+		
 		//Creamos objeto de la clase Scanner
 		Scanner scanner = new Scanner(System.in);
 		//Inicializamos catálogo
@@ -156,7 +158,8 @@ public class Empresa {
 				System.out.println();
 				//Guardamos el catalogo en Tutta para después serialziarlo
 				t.setCatalogo(catalogo.getCatalogo());
-				t.mostrarCatalogo();
+				//Guardamos la base de usuarios en Tutta para después serializarlo
+				t.setListaUsuario(base.getListaUsuario());
 				//SERIALIZAMOS LOS DATOS 
 				try {
 					t.guardarBBDD();

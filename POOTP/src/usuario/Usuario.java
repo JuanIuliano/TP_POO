@@ -1,14 +1,14 @@
 package usuario;
+import java.io.Serializable;
 import java.util.Scanner;
  
-public class Usuario {
+public class Usuario implements Serializable{
+	private static final long serialVersionUID = 1L;
 	//Atributos de objeto usuario
 	int id;
 	String username;
 	String contraseña;
 	String mail;
-	//Objeto de la clase Scanner
-	Scanner scanner = new Scanner(System.in);
 	
 	
 	//Métodos
