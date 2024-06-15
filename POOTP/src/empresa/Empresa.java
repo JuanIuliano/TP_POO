@@ -332,7 +332,10 @@ public class Empresa {
 					//Registramos la venta
 					Venta venta = new Venta();
 					if(p != null) {
-						venta.registrarVenta(p);
+						boolean realizada = venta.registrarVenta(p);
+						if (realizada == true) {
+							t.eliminarPedido(p);
+						}
 					}
 					else {
 						System.out.println("Ocurrió un error.");

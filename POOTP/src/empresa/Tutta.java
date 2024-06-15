@@ -305,6 +305,11 @@ public class Tutta implements Serializable{
 		return null;
 	}
 	
+	public void eliminarPedido(Pedido p) {
+		pedidos.remove(p);
+		
+	}
+	
 	
 
 	// MÉTODOS DE VENTA -------------------------------------------------------------------------------------------------------

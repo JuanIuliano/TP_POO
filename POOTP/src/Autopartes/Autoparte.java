@@ -343,9 +343,9 @@ public class Autoparte implements AutoparteInterface, Serializable{
 		System.out.println("Enlace: "+this.getEnlace());
 		System.out.println("Stock: "+this.getStock());
 		System.out.println("Stock mìnimo: "+this.getStockMinimo());
-		if (this.getStock()==this.getStockMinimo()) {
+		if (this.getStock()<=this.getStockMinimo()) {
 			System.out.println();
-			System.out.println("ESTE PRODUCTO LLEGÒ AL STOCK MÌNIMO.");
+			System.out.println("ESTE PRODUCTO LLEGÓ AL STOCK MÍNIMO.");
 		}
 		System.out.println("-----------------");
 		System.out.println();

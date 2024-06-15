@@ -87,7 +87,7 @@ public class Venta implements Serializable{
 
 
 
-	public void registrarVenta(Pedido p){
+	public boolean registrarVenta(Pedido p){
 		Scanner sc = new Scanner(System.in);
 		//Calcular el precio sumando todas las autopartes del pedido
 		//Obtenemos la lista de autopartes del pedido
@@ -127,6 +127,7 @@ public class Venta implements Serializable{
 		System.out.println("[s] Confirmar venta");
 		System.out.println("Cualquier tecla para cancelar");
 		String conf = sc.next();
+		boolean realizada = false;
 		if (conf.equals("s")){
 			Venta v = new Venta(p, medioPago, montoInicial, montoFinal);
 			System.out.println("Venta realizada.");
@@ -134,12 +135,13 @@ public class Venta implements Serializable{
 			System.out.println("Generando recibo..");
 			Recibo r = new Recibo();
 			r.generarRecibo(v);
+			realizada = true;
 		}
 		else {
 			System.out.println("Venta cancelada");
 		}
 		System.out.println("Ingresa cualquier tecla para continuar");
 		sc.next();
-		return;
+		return realizada;
 	}
 }
