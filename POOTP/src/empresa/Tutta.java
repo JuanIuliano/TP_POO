@@ -13,8 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import Autopartes.Autoparte;
+import pedido.PagoDebito;
+import pedido.PagoEfectivo;
+import pedido.PagoTarjeta;
 import pedido.Pedido;
+import pedido.Recibo;
 import pedido.Venta;
+import pedido.VentaDirecta;
 import cliente.Cliente;
 
 public class Tutta implements Serializable{
@@ -94,6 +99,44 @@ public class Tutta implements Serializable{
 		return clientes;
 	}
 	
+	public Cliente crearCliente() {
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.println("Creando cliente..");
+		System.out.println("Ingrese el nombre y apellido del cliente:");
+		//scanner.nextLine();
+		String nombreApellido = scanner.nextLine();
+		System.out.println("Ingrese el teléfono del cliente:");
+		String telefono = scanner.nextLine();
+		System.out.println("Ingrese la provincia del cliente:");
+		String provincia = scanner.nextLine();
+		System.out.println("Ingrese la localidad del cliente:");
+		String localidad = scanner.nextLine();
+		System.out.println("Ingrese la dirección del cliente (calle + número + código postal):");
+		String direccion = scanner.nextLine();
+		System.out.println("Ingrese el mail del cliente:");
+		String mail = scanner.nextLine();
+		System.out.println();
+		int idC = this.cantidadClientes+1;
+		
+		//creamos cliente con estos parámetros
+		Cliente cliente = new Cliente(idC, nombreApellido, direccion, telefono, localidad, provincia, mail);
+		
+		//Chequeamos que el cliente no esté registrado
+		if(this.clienteExistente(cliente)) {
+			//si está registrado mosotramos error por pantalla
+			System.out.println("Error, el cliente ya está registrado.");
+		}else {
+			this.agregarCliente(cliente);
+			System.out.println("CLIENTE REGISTRADO CON ÉXITO!");
+			System.out.println(idC + " - Nombre: " + nombreApellido);
+			//System.out.println("El ID del cliente es: "+idC);
+			System.out.println();
+			return cliente;
+		}
+		return null;
+	}
+	
 	public void crearPedido() {
 		Scanner scanner = new Scanner(System.in);
 		int id = 0;
@@ -124,10 +167,12 @@ public class Tutta implements Serializable{
 				while(true) {
 					
 					System.out.println("Ingresá el nombre y apellido del cliente:");
-					//scanner.next();
-					String nomap = scanner.next();
+					scanner.nextLine();
+					String nomap = scanner.nextLine();
+					System.out.println("nombre apellido: " + nomap);
 					System.out.println("Ingresá el ID del cliente:");
 					int idcl = scanner.nextInt();
+					System.out.println("id cliente: " + idcl);
 					Cliente c = this.getCliente(nomap, idcl);
 					if(c != null) {
 						System.out.println("El cliente existe.");
@@ -149,39 +194,7 @@ public class Tutta implements Serializable{
 		}
 		
 		else {
-			System.out.println("Creando cliente..");
-			System.out.println("Ingrese el nombre y apellido del cliente:");
-			//scanner.next();
-			String nombreApellido = scanner.next();
-			System.out.println("Ingrese el teléfono del cliente:");
-			String telefono = scanner.next();
-			System.out.println("Ingrese la provincia del cliente:");
-			String provincia = scanner.next();
-			System.out.println("Ingrese la localidad del cliente:");
-			String localidad = scanner.next();
-			System.out.println("Ingrese la dirección del cliente (calle + número + código postal):");
-			String direccion = scanner.next();
-			System.out.println("Ingrese el mail del cliente:");
-			String mail = scanner.next();
-			System.out.println();
-			int idC = this.cantidadClientes+1;
-			
-			//creamos cliente con estos parámetros
-			cliente = new Cliente(idC, nombreApellido, direccion, telefono, localidad, provincia, mail);
-			
-			//Chequeamos que el cliente no esté registrado
-			if(this.clienteExistente(cliente)) {
-				//si está registrado mosotramos error por pantalla
-				System.out.println("Error, el cliente ya está registrado.");
-			}
-			else {
-				this.agregarCliente(cliente);
-				System.out.println("CLIENTE REGISTRADO CON ÉXITO!");
-				System.out.println(idC + " - Nombre: " + nombreApellido);
-				//System.out.println("El ID del cliente es: "+idC);
-				System.out.println();
-				this.cantidadClientes++;
-			}
+			cliente = crearCliente();
 		}
 		
 		
@@ -190,6 +203,9 @@ public class Tutta implements Serializable{
 			System.out.println("Ingresá [ID] de la autoparte que quiere agregar al carrito ");
 			System.out.println("Ingresá [-1] para continuar ");
 			id = scanner.nextInt();
+			if(id == -1) {
+				break;
+			}
 			//Si la autoparte en cuestión existe pedimos la cantidad a reservar
 			if (Empresa.catalogo.autoparteExistente(id)) {
 				System.out.println("Ingresá la cantidad que quiere agregar: ");
@@ -231,10 +247,12 @@ public class Tutta implements Serializable{
              }
 
 			System.out.println();
-			int idPedido = this.cantidadPedidos;
+			int idPedido = this.cantidadPedidos+1;
 			this.cantidadPedidos++;
 			System.out.println("Pedido registrado con éxito.");
-			System.out.println();
+			System.out.println("Ingrese cualquier tecla para continuar...");
+			scanner.next();
+			
 			
 			//Creamos el objeto pedido y lo agregamos a la lista de pedidos
 			Pedido p = new Pedido(cliente, idPedido, autopartes.size(), new Date(), autopartes);
@@ -242,7 +260,12 @@ public class Tutta implements Serializable{
 		}
 	}
 	
-	
+	public boolean pedidosVacio() {
+		if (this.getPedidos().size() > 0) {
+			return false;
+		}
+		return true;
+	}
 	
 	public void cancelarPedido() {
 		Scanner scanner = new Scanner(System.in);
@@ -351,6 +374,170 @@ public class Tutta implements Serializable{
 			System.out.println();
 		}
 		
+	}
+	
+	public void crearVentaDirecta() {
+		Scanner scanner = new Scanner(System.in);
+		int id = 0;
+		int cantidad = 0;
+		Empresa.catalogo.listarCatalogo();	
+		System.out.println();
+		Map<Autoparte, Integer> autopartes = new HashMap <Autoparte, Integer> ();
+		int opc;
+		Cliente cliente = null;
+		
+		//Seleccionamos el cliente que reservará el pedido/si no existe lo creamos
+		System.out.println("CREANDO VENTA DIRECTA");
+		System.out.println("[1] Cliente existente");
+		System.out.println("[2] Nuevo cliente");
+		while (true) {
+			System.out.println("Seleccione una opción: ");
+		    opc = scanner.nextInt();
+			if (opc != 1 && opc != 2) {
+				System.out.println("Opción incorrecta");
+			}
+			else {
+				break;
+			}
+		}
+		if(opc==1) {
+			if (clientes.size() != 0) {
+				mostrarClientes();
+				while(true) {
+					
+					System.out.println("Ingresá el nombre y apellido del cliente:");
+					scanner.nextLine();
+					String nomap = scanner.nextLine();
+					System.out.println("nombre apellido: " + nomap);
+					System.out.println("Ingresá el ID del cliente:");
+					int idcl = scanner.nextInt();
+					System.out.println("id cliente: " + idcl);
+					Cliente c = this.getCliente(nomap, idcl);
+					if(c != null) {
+						System.out.println("El cliente existe.");
+						cliente = c;
+						System.out.println();
+						break;
+					}
+					else {
+						System.out.println("Error, el cliente no existe");
+					}
+				}
+			}
+			else {
+				System.out.println("No hay clientes cargados en el sistema.");
+				System.out.println("presione cualquier tecla para continuar...");
+				id = -1; //necesario para que no se pueda hacer un peido, sin este paso se crearía un pedido sin cliente.
+				scanner.next();
+			}
+		}
+		
+		else {
+			cliente = crearCliente();
+		}
+		
+		
+		
+		while (id != -1) {
+			System.out.println("Ingresá [ID] de la autoparte que quiere agregar al carrito ");
+			System.out.println("Ingresá [-1] para continuar ");
+			id = scanner.nextInt();
+			if(id == -1) {
+				break;
+			}
+			//Si la autoparte en cuestión existe pedimos la cantidad a reservar
+			if (Empresa.catalogo.autoparteExistente(id)) {
+				System.out.println("Ingresá la cantidad que quiere agregar: ");
+				cantidad = scanner.nextInt();
+				System.out.println();
+				//Calculamos si la cantidad a reservar no excede al stock
+				if (Empresa.catalogo.devolverAutoparte(id).getStock() >= cantidad) {
+					//Obtenemos el objeto autoparte correspondiente a el ID
+					Autoparte autoparteExistente = Empresa.catalogo.devolverAutoparte(id);
+					//Lo agregamos al hashmap (obtenemos la cantidad actual y le sumamos la nueva)
+                    autopartes.put(autoparteExistente, autopartes.getOrDefault(autoparteExistente, 0) + cantidad);
+                    //Actualizamos stock
+                    Empresa.catalogo.restarStock(id, cantidad);
+                    System.out.println("id " + id + " cantidad " + cantidad);
+                    System.out.println();
+				}
+				else {
+					System.out.println("Error al realizar la venta, las cantidades exceden al stock.");
+					System.out.println();
+				}
+				
+			}
+			else {
+				System.out.println("Esa autoparte no existe.");
+				System.out.println();
+			}
+		}
+		
+		
+		//Si el hashmap del pedido no esta vacío, es decir, si cargamos autopartes al pedido
+		if (!autopartes.isEmpty()) {
+			System.out.println();
+			System.out.println("LA VENTA ES LA SIGUIENTE: ");
+			int i = 1;
+			//Mostramos el pedido por pantalla
+			for (Map.Entry<Autoparte, Integer> entry : autopartes.entrySet()) {
+                System.out.println(i + " - " + entry.getKey().getDenominacion() + " - " + entry.getValue());
+                i++;
+             }
+
+			System.out.println();
+			int idVenta = ventas.size()+1;
+			
+			double montoInicial = 0;
+			for (Map.Entry<Autoparte, Integer> entry : autopartes.entrySet()) {
+	            montoInicial = (entry.getKey().getPrecioUnitario() * entry.getValue()) + montoInicial;
+	         }
+			
+			System.out.println("Ingrese el medio de pago...");
+			System.out.println("[1] para pagar en efectivo.");
+			System.out.println("[2] para pagar con débito.");
+			System.out.println("[3] para pagar con crédito.");
+			int opcion = scanner.nextInt();
+			double montoFinal = 0;
+			String medioPago = "";
+			switch(opcion) {
+			case 1:
+				PagoEfectivo pagoef = new PagoEfectivo();
+				montoFinal = pagoef.montoFinal(montoInicial);
+				medioPago = "efectivo";
+				break;
+			
+			case 2:
+				PagoDebito pagodeb = new PagoDebito();
+				montoFinal = pagodeb.montoFinal(montoInicial);
+				medioPago = "Débito";
+				break;
+				
+			case 3:
+				PagoTarjeta pagotar = new PagoTarjeta();
+				montoFinal = pagotar.montoFinal(montoInicial);
+				medioPago = "Crédito";
+				break;
+			}
+			System.out.println("EL MONTO FINAL A ABONAR ES: "+montoFinal);
+			System.out.println("Confirmar venta (s/n)");
+			String conf = scanner.next();
+			if (conf.equals("s")){
+				VentaDirecta vd = new VentaDirecta(cliente, idVenta, autopartes.size(), new Date(), autopartes, medioPago, montoInicial, montoFinal); //mediopago, montoinicial, montofinal
+				System.out.println("Venta realizada.");
+				System.out.println();
+				vd.generarRecibo(vd);
+				
+				
+			}
+			else {
+				System.out.println("Venta cancelada");
+			}
+			System.out.println("Ingresa cualquier tecla para continuar");
+			scanner.next();
+			return;
+			
+		}
 	}
 	
 	

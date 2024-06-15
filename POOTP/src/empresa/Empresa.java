@@ -215,7 +215,18 @@ public class Empresa {
 				break;
 			
 			case 4: //Listar catálogo - crear pedidos
-				t.crearPedido();
+				int menu = 0;
+				while(menu != 1 && menu != 2) {
+					System.out.println("[1] crear un pedido");
+					System.out.println("[2] crear una venta");
+					menu = scanner.nextInt();
+				}
+				if (menu == 1) {
+					t.crearPedido();
+					
+				}else if (menu == 2){
+					t.crearVentaDirecta();					
+				}
 				break;
 				
 			case 5: //Ver pedidos / Cancelar pedidos
@@ -223,30 +234,37 @@ public class Empresa {
 				break;
 				
 			case 6: //Registrar venta
-				t.mostrarPedidos();
-				System.out.println();
-				boolean existe = false;
-				Pedido p = null;
-				
-				while (!existe) {
-					System.out.println("Ingrese el [ID] del pedido a vender");
-					int idP = scanner.nextInt();
-					p = t.devolverPedido(idP);
-					if(p != null){
-						break;
+				if(t.pedidosVacio() == false) {
+					
+					t.mostrarPedidos();
+					System.out.println();
+					boolean existe = false;
+					Pedido p = null;
+					
+					while (!existe) {
+						System.out.println("Ingrese el [ID] del pedido a vender");
+						int idP = scanner.nextInt();
+						p = t.devolverPedido(idP);
+						if(p != null){
+							break;
+						}
+						else {
+							System.out.println("No existe un pedido con ese ID, ingrese otro.");
+						}
+					}
+					
+					//Registramos la venta
+					Venta venta = new Venta();
+					if(p != null) {
+						venta.registrarVenta(p);
 					}
 					else {
-						System.out.println("No existe un pedido con ese ID, ingrese otro.");
+						System.out.println("Ocurrió un error.");
 					}
-				}
-				
-				//Registramos la venta
-				Venta venta = new Venta();
-				if(p != null) {
-					venta.registrarVenta(p);
-				}
-				else {
-					System.out.println("Ocurrió un error.");
+				}else {
+					System.out.println("No hay ningún pedido en el sistema.");
+					System.out.println("Ingrese una tecla para continuar");
+					scanner.next();
 				}
 				break;
 				
@@ -264,10 +282,15 @@ public class Empresa {
 						}
 						Cliente c = t.getClienteId(id);
 						if(c != null) {
+							boolean hayPedidos = false;
 							for (Pedido pedido : t.getPedidos()) {
 								if(pedido.getCliente() == c) {
 									pedido.mostrarPedido();
+									hayPedidos = true;
 								}
+							}
+							if(hayPedidos == false) {
+								System.out.println("Ese cliente no ha hecho ningún pedido.");
 							}
 						}
 						else {
