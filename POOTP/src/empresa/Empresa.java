@@ -109,6 +109,7 @@ public class Empresa {
 		Tutta t = null;
 		try {
 			t = Tutta.cargarBBDD();
+			t.mostrarCatalogo();
 		} 
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -119,32 +120,11 @@ public class Empresa {
 		//Creamos objeto de la clase Scanner
 		Scanner scanner = new Scanner(System.in);
 		//Inicializamos catálogo
-		catalogo.inicializarCatalogo();
+		catalogo.inicializarCatalogo();	
+		catalogo.setCatalogo(t.getCatalogo());
 		//Variable que sirve para cortar el ciclo del menú
 		int flag=0;
 		
-		//AUTOPARTES PRECARGADAS A MODO DE EJEMPLO
-		// Ejemplo de uso del constructor para cada autoparte
- 
-		// Autoparte 1: Pistón
-		Autoparte piston = new Autoparte(001, "Pistón", "Componente de motor para convertir la energía de combustión en energía mecánica.", "Motor", "Bosch", "Automóvil", "Todos los modelos", 50.00, "www.etc.com/piston", 20, 20);
-		catalogo.cargarAutoparte(piston);
- 
-		// Autoparte 2: Filtro de aire
-		Autoparte filtroAire = new Autoparte(002, "Filtro de aire", "Filtra el aire que ingresa al motor para evitar la entrada de partículas dañinas.","Sistema de admisión", "Mann-Filter", "Camioneta", "SUV", 15.50, "www.etc.com/filtro-aire", 30, 30);
-		catalogo.cargarAutoparte(filtroAire);
- 
-		// Autoparte 3: Batería
-		Autoparte bateria = new Autoparte(003, "Batería de automóvil", "Suministra energía eléctrica para encender el motor y alimentar los sistemas eléctricos del vehículo.", "Sistema eléctrico", "Exide", "Automóvil", "Sedán", 120.00, "www.etc.com/bateria", 50, 10);
-		 catalogo.cargarAutoparte(bateria);
- 
-		// Autoparte 4: Amortiguador
-		Autoparte amortiguador = new Autoparte(004, "Amortiguador trasero", "Absorbe y disipa la energía cinética generada por la suspensión del vehículo.", "Suspensión", "Monroe", "Automóvil", "Hatchback", 80.00, "www.etc.com/amortiguador", 80, 15);
-		catalogo.cargarAutoparte(amortiguador);
- 
-		// Autoparte 5: Pastillas de freno
-		Autoparte pastillasFreno = new Autoparte(005, "Pastillas de freno delanteras", "Componentes que presionan contra el disco de freno para detener el vehículo.", "Frenos", "Brembo", "Camioneta", "Todoterreno", 65.00, "www.etc.com/pastillas-freno", 120, 25);
-		catalogo.cargarAutoparte(pastillasFreno);
 		
 		
 		//-------------MENÚ PRINCIPAL-----------------//
@@ -176,6 +156,7 @@ public class Empresa {
 				System.out.println();
 				//Guardamos el catalogo en Tutta para después serialziarlo
 				t.setCatalogo(catalogo.getCatalogo());
+				t.mostrarCatalogo();
 				//SERIALIZAMOS LOS DATOS 
 				try {
 					t.guardarBBDD();

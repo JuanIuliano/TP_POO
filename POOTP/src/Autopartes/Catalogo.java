@@ -15,9 +15,13 @@ public class Catalogo {
 
 	
 	public void inicializarCatalogo() {
-		catalogo = Tutta.getCatalogo();
+		catalogo = new ArrayList<>();
 		autopartesStockMin = new ArrayList<>();
 		inicializado = 1;
+	}
+	
+	public void setCatalogo(ArrayList<Autoparte> catalogo) {
+		this.catalogo = catalogo;
 	}
 	
 	public boolean autoparteExistente(int id) {

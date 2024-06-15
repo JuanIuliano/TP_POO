@@ -28,7 +28,7 @@ public class Tutta implements Serializable{
 	private ArrayList <Pedido> pedidos = new ArrayList<>();
 	private ArrayList <Venta> ventas = new ArrayList<>();
 	private ArrayList <Cliente> clientes = new ArrayList<>();
-	private static ArrayList <Autoparte> catalogo = new ArrayList<>();
+	private ArrayList <Autoparte> catalogo = new ArrayList<>();
 	public int cantidadPedidos;
 	public int cantidadClientes = 0;
 	
@@ -47,6 +47,12 @@ public class Tutta implements Serializable{
             System.out.println("Base de datos guardada con éxito.");
         }
     }
+	
+	public void mostrarCatalogo() {
+		System.out.println(catalogo.size());
+		System.out.println(pedidos.size());
+		System.out.println(clientes.size());
+	}
  
 	
 	//CARGAR OBJETO CON ARCHIVO SERIALIZADO
@@ -72,12 +78,12 @@ public class Tutta implements Serializable{
 	 
 	 
 	 // MÉTODOS DE CATALOGO/AUTOPARTES ---------------------------------------------------------------------------------------------
-	public static ArrayList<Autoparte> getCatalogo(){
-		return catalogo;
+	public ArrayList<Autoparte> getCatalogo(){
+		return this.catalogo;
 	}
 		
 	public void setCatalogo(ArrayList<Autoparte> catalogo) {
-		Tutta.catalogo = catalogo;
+		this.catalogo = catalogo;
 	}
 	
 
