@@ -50,6 +50,9 @@ public class Tutta {
 		}
 	}
 	
+	public ArrayList<Cliente> getClientes() {
+		return clientes;
+	}
 	
 	public void crearPedido() {
 		Scanner scanner = new Scanner(System.in);
@@ -76,40 +79,50 @@ public class Tutta {
 			}
 		}
 		if(opc==1) {
-			while(true) {
-				System.out.println("Ingresá el nombre y apellido del usuario:");
+			if (clientes.size() != 0) {
+				mostrarClientes();
+				while(true) {
+					
+					System.out.println("Ingresá el nombre y apellido del cliente:");
+					//scanner.next();
+					String nomap = scanner.next();
+					System.out.println("Ingresá el ID del cliente:");
+					int idcl = scanner.nextInt();
+					Cliente c = this.getCliente(nomap, idcl);
+					if(c != null) {
+						System.out.println("El cliente existe.");
+						cliente = c;
+						System.out.println();
+						break;
+					}
+					else {
+						System.out.println("Error, el cliente no existe");
+					}
+				}
+			}
+			else {
+				System.out.println("No hay clientes cargados en el sistema.");
+				System.out.println("presione cualquier tecla para continuar...");
+				id = -1; //necesario para que no se pueda hacer un peido, sin este paso se crearía un pedido sin cliente.
 				scanner.next();
-				String nomap = scanner.nextLine();
-				System.out.println("Ingresá el ID del usuario:");
-				int idcl = scanner.nextInt();
-				Cliente c = this.getCliente(nomap, idcl);
-				if(c != null) {
-					System.out.println("El cliente existe.");
-					cliente = c;
-					System.out.println();
-					break;
-				}
-				else {
-					System.out.println("Error, el cliente no existe");
-				}
 			}
 		}
 		
 		else {
 			System.out.println("Creando cliente..");
 			System.out.println("Ingrese el nombre y apellido del cliente:");
-			scanner.next();
-			String nombreApellido = scanner.nextLine();
+			//scanner.next();
+			String nombreApellido = scanner.next();
 			System.out.println("Ingrese el teléfono del cliente:");
-			String telefono = scanner.nextLine();
+			String telefono = scanner.next();
 			System.out.println("Ingrese la provincia del cliente:");
-			String provincia = scanner.nextLine();
+			String provincia = scanner.next();
 			System.out.println("Ingrese la localidad del cliente:");
-			String localidad = scanner.nextLine();
+			String localidad = scanner.next();
 			System.out.println("Ingrese la dirección del cliente (calle + número + código postal):");
-			String direccion = scanner.nextLine();
+			String direccion = scanner.next();
 			System.out.println("Ingrese el mail del cliente:");
-			String mail = scanner.nextLine();
+			String mail = scanner.next();
 			System.out.println();
 			int idC = this.cantidadClientes+1;
 			
@@ -124,7 +137,8 @@ public class Tutta {
 			else {
 				this.agregarCliente(cliente);
 				System.out.println("CLIENTE REGISTRADO CON ÉXITO!");
-				System.out.println("El ID del cliente es: "+idC);
+				System.out.println(idC + " - Nombre: " + nombreApellido);
+				//System.out.println("El ID del cliente es: "+idC);
 				System.out.println();
 				this.cantidadClientes++;
 			}
@@ -278,13 +292,22 @@ public class Tutta {
 		return null;
 	}
 	
+	public Cliente getClienteId(int id) {
+		for(Cliente c : clientes) {
+			if(c.getId() == id) {
+				return c;
+			}
+		}
+		return null;
+	}
+	
 	public void mostrarClientes() {
 		for(Cliente c : clientes) {
 			System.out.println("ID: "+c.getId());
 			System.out.println("Nombre y Apellido: "+c.getNombreApellido());
 			System.out.println("Provincia: "+c.getProvincia());
 			System.out.println("Direccion: "+c.getDireccion());
-			System.out.println();
+			System.out.println("--------------------------------");
 			System.out.println();
 		}
 		

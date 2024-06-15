@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 import Autopartes.Autoparte;
 import Autopartes.Catalogo;
+import cliente.Cliente;
 import pedido.Pedido;
 import pedido.Recibo;
 import pedido.Venta;
@@ -152,6 +153,7 @@ public class Empresa {
 			System.out.println("[4] Listar productos / Reservar pedido");
 			System.out.println("[5] Listar/Cancelar pedidos");
 			System.out.println("[6] Registrar venta");
+			System.out.println("[7] Listar clientes"); //ver sus respectivos pedidos
 			System.out.println();
 			System.out.println("[-1] Cerrar sesión");
 			System.out.println("[-2] SALIR");
@@ -215,7 +217,7 @@ public class Empresa {
 				Pedido p = null;
 				
 				while (!existe) {
-					System.out.println("Ingrese el ID del pedido a vender");
+					System.out.println("Ingrese el [ID] del pedido a vender");
 					int idP = scanner.nextInt();
 					p = t.devolverPedido(idP);
 					if(p != null){
@@ -237,8 +239,35 @@ public class Empresa {
 				break;
 				
 			case 7:
-				t.mostrarClientes();
-				
+				if(t.getClientes().size() != 0) {
+					t.mostrarClientes();
+					int op = 0;
+					int id = 0;
+					while(true) {
+						System.out.println("Ingrese el [ID] del cliente que quiera ver sus pedidos: ");
+						System.out.println("Presione [-1] para salir.");
+						id = scanner.nextInt();
+						if (id == -1) {
+							break;
+						}
+						Cliente c = t.getClienteId(id);
+						if(c != null) {
+							for (Pedido pedido : t.getPedidos()) {
+								if(pedido.getCliente() == c) {
+									pedido.mostrarPedido();
+								}
+							}
+						}
+						else {
+							System.out.println("No exite cliente con ese ID.");
+						}
+					}
+				}else {
+					System.out.println("No hay clientes cargados en el sistema.");
+					System.out.println("Presione cualquier tecla para continuar...");
+					scanner.next();
+				}
+				break;
 			}
 		}
 	}
