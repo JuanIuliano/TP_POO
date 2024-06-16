@@ -148,7 +148,7 @@ public class Empresa {
 				System.out.println("[7] Listar clientes / Ver pedidos asociados"); // ver sus respectivos pedidos
 				System.out.println();
 				System.out.println("[-1] Cerrar sesión");
-				System.out.println("[-2] SALIR");
+				System.out.println("[-2] SALIR (guardar todas las actualizaciones)");
 				System.out.println("-------------------------------");
 				System.out.println("Ingresá una opción: ");
 				opcion = scanner.nextInt();
@@ -194,14 +194,33 @@ public class Empresa {
 				catalogo.listarCatalogo();
 				System.out.println();
 				System.out.println("Ingresá el ID de la autoparte que querés cambiar");
-				int idMod = scanner.nextInt();
-				catalogo.modificarAutoparte(idMod);
+				while(true) {
+					try {
+						int idMod = scanner.nextInt();
+						catalogo.modificarAutoparte(idMod);
+						break;
+					}catch(InputMismatchException e) {
+						System.out.println("Error, por favor ingrese un número entero.");
+						scanner.next(); //Sirve para limpiar el buffer
+					}
+				}
 				System.out.println("Ingresà cualquier tecla para continuar.");
 				scanner.next();
 				break;
+				
 			case 3: // Eliminar autoparte
-				System.out.println("Ingresa el ID de la autoaparte que quieras borrar");
-				int idBorrar = scanner.nextInt();
+				int idBorrar;
+				System.out.println("Ingresa el ID de la autoaparte que quieras borrar [-1 para volver]");
+				while(true) {
+					try {
+						idBorrar = scanner.nextInt();
+						break;
+					}catch(InputMismatchException e) {
+						System.out.println("Error, por favor ingrese un número entero.");
+						scanner.next();
+					}
+				}
+				if(idBorrar == 1) {break;}
 				catalogo.eliminarAutoparte(idBorrar);
 				System.out.println("Ingresà cualquier tecla para continuar.");
 				scanner.next();

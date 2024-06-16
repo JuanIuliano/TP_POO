@@ -139,13 +139,22 @@ public class Tutta implements Serializable {
 	public Cliente seleccionarCliente() {
 		Scanner scanner = new Scanner(System.in);
 		Cliente cliente = null;
+		int idcl;
 		while (true) {
-
 			System.out.println("Ingresá el nombre y apellido del cliente:");
 			String nomap = scanner.nextLine();
 			System.out.println("nombre apellido: " + nomap);
 			System.out.println("Ingresá el ID del cliente:");
-			int idcl = scanner.nextInt();
+			while(true) {
+				try {
+					idcl = scanner.nextInt();
+					scanner.nextLine();
+					break;
+				}catch(InputMismatchException e) {
+					System.out.println("Error, por favor ingrese un número entero.");
+					scanner.next();
+				}
+			}
 			System.out.println("id cliente: " + idcl);
 			Cliente c = getCliente(nomap, idcl);
 			if (c != null) {
@@ -196,6 +205,7 @@ public class Tutta implements Serializable {
 		for (Cliente c : clientes) {
 			System.out.println("ID: " + c.getId());
 			System.out.println("Nombre y Apellido: " + c.getNombreApellido());
+			System.out.println("Número telefónico: " + c.getTelefono());
 			System.out.println("Provincia: " + c.getProvincia());
 			System.out.println("Direccion: " + c.getDireccion());
 			System.out.println("--------------------------------");

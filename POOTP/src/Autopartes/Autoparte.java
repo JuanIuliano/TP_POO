@@ -1,5 +1,6 @@
 package Autopartes;
 import java.io.Serializable;
+import java.util.InputMismatchException;
 import java.util.Scanner;
  
 public class Autoparte implements AutoparteInterface, Serializable{
@@ -112,72 +113,98 @@ public class Autoparte implements AutoparteInterface, Serializable{
 	
 	//Método que sirve para cambiar los datos de un objeto autoparte
 	public void modificarDatos() {
+		int opcion = 0;
 		//Crear objeto de la clase Scanner
 		Scanner scanner = new Scanner(System.in);
 		//Menú
-		System.out.println("-------------------------------");
-		System.out.println("Menú de la autoparte: "+this.denominacion);
-		System.out.println();
-		System.out.println("[1] Modificar datos");
-		System.out.println("[2] Aumentar stock");
-		System.out.println("[3] Descontar stock");
-		System.out.println("-------------------------------");
-		System.out.println("Ingresá una opción: (-1 para cancelar)");
-		int opcion = scanner.nextInt();
-		if (opcion==-1) {
-			System.out.println("Modificaciòn cancelada.");
-			return;
-		}
-		//El ciclo sirve para validar que la opcion sea correcta. No deberia poder ingresar un numero fuera del rango 1-3, ni un string **Excepciones
-		while(opcion<1 || opcion>3) {
-			System.out.println("Error, ingrese una opción válida.");
-			opcion = scanner.nextInt();
-			//faltaria el manejador de excepciones por si se inresa algo != a int
+				System.out.println("-------------------------------");
+				System.out.println("Menú de la autoparte: "+this.denominacion);
+				System.out.println();
+				System.out.println("[1] Modificar datos");
+				System.out.println("[2] Aumentar stock");
+				System.out.println("[3] Descontar stock");
+				System.out.println("-------------------------------");
+				System.out.println("Ingresá una opción: (-1 para cancelar)");
+				while(true) {
+					try {
+						opcion = scanner.nextInt();
+						if (opcion==-1) {
+							System.out.println("Modificaciòn cancelada.");
+							return;
+						}
+					//El ciclo sirve para validar que la opcion sea correcta. No deberia poder ingresar un numero fuera del rango 1-3, ni un string **Excepciones
+						while(opcion<1 || opcion>3) {
+							System.out.println("Error, ingrese una opción válida.");
+							opcion = scanner.nextInt();
+							//faltaria el manejador de excepciones por si se inresa algo != a int
+							}
+						break;
+						
+			}catch(InputMismatchException e) {
+				System.out.println("Error, ingrese un número entero.");
+				scanner.next();
 			}
+		}
 		
 		
 	switch(opcion) { //Modificar datos
 	case 1:
-		//MODIFICAR DATOS
-		//Menú
-		opcion=0;
-		System.out.println("-------------------------------");
-		System.out.println("Cambiando autoparte");
-		System.out.println();
-		System.out.println("[1] Modificar ID");
-		System.out.println("[2] Modificar denominación");
-		System.out.println("[3] Modificar descripción");
-		System.out.println("[4] Modificar categoria");
-		System.out.println("[5] Modificar marca");
-		System.out.println("[6] Modificar vehiculo");
-		System.out.println("[7] Modificar modelo");
-		System.out.println("[8] Modificar precio");
-		System.out.println("[9] Modificar enlace");
-		System.out.println("[10] Modificar stock mínimo");
-		System.out.println("-------------------------------");
-		System.out.println("Ingresá una opción: (-1 para cancelar)");
-		opcion = scanner.nextInt();
-		if (opcion==-1) {
-			System.out.println("Modificaciòn cancelada.");
-			return;
-		}
-		
-		//Validamos la opcion elegida **Excepciones
-		while (opcion<1 || opcion>10) {
-			System.out.println("Error, ingrese una opción válida.");
-			opcion = scanner.nextInt();
+			//MODIFICAR DATOS
+			//Menú
+			opcion=0;
+			System.out.println("-------------------------------");
+			System.out.println("Cambiando autoparte");
+			System.out.println();
+			System.out.println("[1] Modificar ID");
+			System.out.println("[2] Modificar denominación");
+			System.out.println("[3] Modificar descripción");
+			System.out.println("[4] Modificar categoria");
+			System.out.println("[5] Modificar marca");
+			System.out.println("[6] Modificar vehiculo");
+			System.out.println("[7] Modificar modelo");
+			System.out.println("[8] Modificar precio");
+			System.out.println("[9] Modificar enlace");
+			System.out.println("[10] Modificar stock mínimo");
+			System.out.println("-------------------------------");
+			System.out.println("Ingresá una opción: (-1 para cancelar)");
+			while(true) {
+				try {
+					opcion = scanner.nextInt();
+					if (opcion==-1) {
+						System.out.println("Modificaciòn cancelada.");
+						return;
+					}
+					
+					//Validamos la opcion elegida **Excepciones
+					while (opcion<1 || opcion>10) {
+						System.out.println("Error, ingrese una opción válida.");
+						opcion = scanner.nextInt();
+					}
+					break;
+			}catch(InputMismatchException e) {
+				System.out.println("Error, ingrese un número entero.");
+				scanner.next();
+			}
 		}
 		//Dependiendo de la opción elegida modificamos el dato
 		switch(opcion){
 			case 1: //Modificar ID
+				int nuevaID = 0;
 				System.out.println("Ingrese la nueva ID (-1 para cancelar)");
-				scanner.nextLine(); //Esto es para limpiar el buffer
-				int nuevaID = scanner.nextInt();
-				if (nuevaID == -1) {
-					System.out.println("Modificaciòn cancelada.");
-					return;
+				while(true) {
+					try {
+						scanner.nextLine(); //Esto es para limpiar el buffer
+						nuevaID = scanner.nextInt();
+						if (nuevaID == -1) {
+							System.out.println("Modificaciòn cancelada.");
+							return;
+						}
+						break;
+					}catch(InputMismatchException e) {
+						System.out.println("Error, por favor ingrese un número entero.");
+						scanner.next();
+					}
 				}
-				//Manejador de excepciones
 				//Asignamos la nueva ID
 				this.id = nuevaID;
 				break;
@@ -255,13 +282,23 @@ public class Autoparte implements AutoparteInterface, Serializable{
 				break;
 			
 			case 8: //Modificar precio
+				double nuevoPrecio = 0;
 				System.out.println("Ingrese el nuevo precio unitario (-1 para cancelar)");
-				scanner.nextLine(); //Esto es para limpiar el buffer
-				double nuevoPrecio = scanner.nextDouble(); // **Excepciones
-				if (nuevoPrecio == -1) {
-					System.out.println("Modificaciòn cancelada.");
-					return;
-				}
+				while(true) {
+					try {
+						scanner.nextLine(); //Esto es para limpiar el buffer
+						nuevoPrecio = scanner.nextDouble(); // **Excepciones
+						if (nuevoPrecio == -1) {
+							System.out.println("Modificaciòn cancelada.");
+							return;
+						}
+						break;
+						}catch(InputMismatchException e) {
+							System.out.println("Error, por favor ingrese un número entero.");
+							scanner.next();
+						}	
+					}
+				
 				//Asignamos el nuevo precio
 				this.precioUnitario = nuevoPrecio;
 				break;
@@ -279,16 +316,25 @@ public class Autoparte implements AutoparteInterface, Serializable{
 				break;
 			
 			case 10: //Modificar stock mínimo
+				int nuevoStockMin = 0;
 				System.out.println("Ingrese el nuevo stock mínimo (-1 para cancelar)");
-				scanner.nextLine(); //Esto es para limpiar el buffer
-				int nuevoStockMin = scanner.nextInt();
-				while (nuevoStockMin>this.stock) {
-					if (nuevoStockMin == -1) {
-						System.out.println("Modificaciòn cancelada.");
-						return;
+				while(true) {
+					try {
+						scanner.nextLine(); //Esto es para limpiar el buffer
+						nuevoStockMin = scanner.nextInt();
+						while (nuevoStockMin>this.stock) {
+							if (nuevoStockMin == -1) {
+								System.out.println("Modificaciòn cancelada.");
+								return;
+							}
+							System.out.println("El stock mínimo no puede ser mayor que el stock disponible actualmente ("+this.stock+"). Ingrese de nuevo (-1 para cancelar)");
+							nuevoStockMin = scanner.nextInt();
+						}
+						break;
+					}catch(InputMismatchException e) {
+						System.out.println("Error, por favor ingrese un número entero.");
+						scanner.next();
 					}
-					System.out.println("El stock mínimo no puede ser mayor que el stock disponible actualmente ("+this.stock+"). Ingrese de nuevo (-1 para cancelar)");
-					nuevoStockMin = scanner.nextInt();
 				}
 				//Asignamos el nuevo stock mínimo
 				this.stockMinimo = nuevoStockMin;
@@ -299,36 +345,55 @@ public class Autoparte implements AutoparteInterface, Serializable{
 		
 	case 2:
 		System.out.println("Ingrese la cantidad de stock nuevo (-1 para cancelar)");
-		int nuevoStock = scanner.nextInt();
-		if (nuevoStock == -1) {
-			System.out.println("Modificaciòn cancelada.");
-			return;
+		while(true) {
+			try {
+				int nuevoStock = scanner.nextInt();
+				if (nuevoStock == -1) {
+					System.out.println("Modificaciòn cancelada.");
+					return;
+				}
+				//Calculamos y asignamos el nuevo stock
+				this.stock = this.stock + nuevoStock;
+				break;
+			}catch(InputMismatchException e) {
+				System.out.println("Error, por favor ingrese un número entero.");
+				scanner.next();
+			}
 		}
-		//Calculamos y asignamos el nuevo stock
-		this.stock = this.stock + nuevoStock;
 		break;
+		
 		
 	case 3:
 		System.out.println("Ingrese la cantidad de unidades a descontar (-1 para cancelar)");
-		int menosStock = scanner.nextInt();
-		if (menosStock == -1) {
-			System.out.println("Modificaciòn cancelada.");
-			return;
-		}
-		//Calculamos y asignamos el nuevo stock
-		//Vemos que no haya menos stock del stock mínimo
-		if(this.stock-menosStock<this.stockMinimo) {
-			System.out.println("No se puede realizar la operación porque quedarías con menos stock del mínimo permitido. Ingrese de nuevo");
-			menosStock = scanner.nextInt();
-		}
-		else {
-		this.stock = this.stock - menosStock;
-		break;
-		}
+		while(true) {
+			try {
+					int menosStock = scanner.nextInt();
+					if (menosStock == -1) {
+						System.out.println("Modificaciòn cancelada.");
+						return;
+					}
+					//Calculamos y asignamos el nuevo stock
+					//Vemos que no haya menos stock del stock mínimo
+					if(this.stock-menosStock<this.stockMinimo) {
+						System.out.println("No se puede realizar la operación porque quedarías con menos stock del mínimo permitido. Ingrese de nuevo");
+						menosStock = scanner.nextInt();
+					}
+					else {
+					this.stock = this.stock - menosStock;
+					}
+					break;
+				}catch(InputMismatchException e) {
+					System.out.println("Error, por favor ingrese un número entero.");
+					scanner.next();
+				}
+			}	
+			break;
 		}
 	
 	System.out.println("Cambios realizados con èxito.");
 	}
+			
+			
 	
 	@Override
 	public void mostrarAutoparte() {

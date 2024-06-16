@@ -1,5 +1,6 @@
 package Autopartes;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import empresa.Empresa;
@@ -76,17 +77,34 @@ public class Catalogo {
 				
 				System.out.println("Ingresá el ID");
 				//scanner.nextLine(); //Esto es para limpiar el buffer
-				int id = scanner.nextInt();
-				if(id==-1) {
-					System.out.println("Carga cancelada.");
-					return;
+				int id = -100;
+				while(true) {
+					try {
+						id = scanner.nextInt();
+						if(id==-1) {
+							System.out.println("Carga cancelada.");
+							return;
+						}
+						break;
+					}catch(InputMismatchException e) {
+						System.out.println("Error, por favor ingrese un número entero.");
+						scanner.next();
+					}
 				}
 				
 				// Ciclo para validar que el ID no este ocupado
 				while (autoparteExistente(id)==true) {
 					System.out.println("La autoparte ya existe y esta cargada en el catálogo. Ingrese otra");
-					scanner.nextLine(); //Esto es para limpiar el buffer
-					id = scanner.nextInt();
+					while(true) {
+						try {
+						scanner.nextLine(); //Esto es para limpiar el buffer
+						id = scanner.nextInt();
+						break;
+						}catch(InputMismatchException e) {
+							System.out.println("Error, por favor ingrese un número entero");
+							scanner.next();
+						}
+					}
 					if(id==-1) {
 						System.out.println("Carga cancelada.");
 						return;
@@ -135,8 +153,17 @@ public class Catalogo {
 					return;
 				}
 				System.out.println("Ingresá el precio unitario");
+				double precioUnitario;
 				//scanner.nextLine(); //Esto es para limpiar el buffer
-				double precioUnitario = scanner.nextDouble();
+				while(true) {
+					try {
+						precioUnitario = scanner.nextDouble();
+						break;
+					}catch(InputMismatchException e) {
+						System.out.println("Error, por favor ingrese un número entero.");
+						scanner.next();
+					}
+				}
 				if(precioUnitario == -1) {
 					System.out.println("Carga cancelada.");
 					return;
@@ -149,15 +176,33 @@ public class Catalogo {
 					return;
 				}
 				System.out.println("Ingresá el stock mínimo");
+				int stockMinimo;
 				//scanner.nextLine(); //Esto es para limpiar el buffer
-				int stockMinimo = scanner.nextInt();
+				while(true) {
+					try {
+						stockMinimo = scanner.nextInt();
+						break;
+					}catch(InputMismatchException e) {
+						System.out.println("Error, por favor ingrese un número entero.");
+						scanner.next();
+					}
+				}
 				if(stockMinimo == -1) {
 					System.out.println("Carga cancelada.");
 					return;
 				}
 				System.out.println("Ingresá el stock");
+				int stock;
 				scanner.nextLine(); //Esto es para limpiar el buffer
-				int stock = scanner.nextInt();
+				while(true) {
+					try {
+						stock = scanner.nextInt();
+						break;
+					}catch(InputMismatchException e) {
+						System.out.println("Error, por favor ingrese un número entero.");
+						scanner.next();
+					}
+				}
 				if(stock == -1) {
 					System.out.println("Carga cancelada.");
 					return;
@@ -165,7 +210,15 @@ public class Catalogo {
 				else { // validacion de stock
 					while(stock<stockMinimo) {
 						System.out.println("Error, el stock no puede ser menor al stock mìnimo. Ingrese el stock de nuevo");
-						stock = scanner.nextInt();
+						while(true) {
+							try {
+								stock = scanner.nextInt();
+								break;
+							}catch(InputMismatchException e) {
+								System.out.println("Error, por favor ingrese un número entero.");
+								scanner.next();
+							}
+						}
 					}
 				}
 				

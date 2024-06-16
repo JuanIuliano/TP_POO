@@ -1,5 +1,6 @@
 package pedido;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class PagoTarjeta extends Pago {
@@ -13,12 +14,20 @@ public class PagoTarjeta extends Pago {
 	public double montoFinal(double montoInicial) {
 		//Solicitamos la cantidad de cuotas a abonar
 		System.out.println("Ingrese la cantidad de cuotas que desea (La cantidad de cuotas pueden ser 2, 3 o 6), cada una con su respectivo recargo. ");
-		cuotas = scanner.nextInt();
-		
-		//Válidamos que las cuotas ingresadas sean correctas
-		while(cuotas != 2 && cuotas != 3 && cuotas != 6) {
-			System.out.println("Error, esa cantidad de cuotas no está disponible. Ingrese de nuevo");
-			cuotas = scanner.nextInt();
+		while(true) {
+			try {
+					cuotas = scanner.nextInt();
+					
+					//Válidamos que las cuotas ingresadas sean correctas
+					while(cuotas != 2 && cuotas != 3 && cuotas != 6) {
+						System.out.println("Error, esa cantidad de cuotas no está disponible. Ingrese de nuevo");
+						cuotas = scanner.nextInt();
+					}
+					break;
+				}catch(InputMismatchException e) {
+					System.out.println("Error, por favor ingrese un número entero");
+					scanner.next();
+			}
 		}
 		
 		//Dependiendo las cuotas asignamos un recargo distinto
