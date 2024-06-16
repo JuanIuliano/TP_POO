@@ -231,6 +231,7 @@ public class Empresa {
 					if (t.getClientes().size() != 0) {
 						t.mostrarClientes();
 						cliente = t.seleccionarCliente();
+						if(cliente==null) {break;}
 					}
 					else {
 						System.out.println("No hay clientes cargados en el sistema.");
@@ -369,6 +370,7 @@ public class Empresa {
 								}
 							}
 							if(hayPedidos == false) {
+								System.out.println();
 								System.out.println("Ese cliente no ha hecho ningún pedido.");
 							}
 						}

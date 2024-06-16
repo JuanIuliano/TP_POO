@@ -142,12 +142,18 @@ public class Tutta implements Serializable{
 		Cliente cliente = null;
 		while(true) {
 			
+			System.out.println("Ingrese -1 en cualquier campo si quiere volver.");
 			System.out.println("Ingresá el nombre y apellido del cliente:");
 			String nomap = scanner.nextLine();
-			System.out.println("nombre apellido: " + nomap);
+				if(nomap.equals("-1")) {return null;}
+				
 			System.out.println("Ingresá el ID del cliente:");
 			int idcl = scanner.nextInt();
-			System.out.println("id cliente: " + idcl);
+			scanner.nextLine();
+				if(idcl == -1) {return null;}
+			
+			System.out.println(nomap);
+			System.out.println(idcl);
 			Cliente c = getCliente(nomap, idcl);
 			if(c != null) {
 				System.out.println("El cliente existe.");
@@ -157,7 +163,8 @@ public class Tutta implements Serializable{
 			}
 			else {
 				System.out.println("Error, el cliente no existe");
-			}
+				System.out.println();
+				}
 		}
 	}
 	
@@ -195,6 +202,7 @@ public class Tutta implements Serializable{
 	
 	public void mostrarClientes() {
 		for(Cliente c : clientes) {
+			System.out.println("--------------------------------");
 			System.out.println("ID: "+c.getId());
 			System.out.println("Nombre y Apellido: "+c.getNombreApellido());
 			System.out.println("Provincia: "+c.getProvincia());
@@ -284,13 +292,13 @@ public class Tutta implements Serializable{
 			System.out.println("Pedidos: ");
 			
 			for (Pedido pedido : this.pedidos) {
-				System.out.println("--------------");
+				System.out.println("------------------------------");
                 System.out.println("ID: "+pedido.getIdPedido() + " -- A nombre de: "+pedido.getCliente().getNombreApellido());
                 System.out.println("Autopartes del pedido: ");
                 for (Map.Entry<Autoparte, Integer> entry : pedido.getAutopartes().entrySet()) {
                     System.out.println("- " + entry.getKey().getDenominacion() + " - " + entry.getValue());
                 }
-                System.out.println("--------------");
+                System.out.println("------------------------------");
             }
 		}
 	
